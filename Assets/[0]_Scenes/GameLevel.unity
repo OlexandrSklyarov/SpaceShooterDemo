@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 1688511571}
   m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
@@ -1100,7 +1100,7 @@ PrefabInstance:
     - target: {fileID: 269368995763512676, guid: 8e7ed39784bea8431996a8bde4b03128,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 269368995763512676, guid: 8e7ed39784bea8431996a8bde4b03128,
         type: 3}
@@ -1140,6 +1140,11 @@ PrefabInstance:
     - target: {fileID: 269368995763512676, guid: 8e7ed39784bea8431996a8bde4b03128,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 269368995763512678, guid: 8e7ed39784bea8431996a8bde4b03128,
+        type: 3}
+      propertyPath: m_ReceiveShadows
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 269368995763512696, guid: 8e7ed39784bea8431996a8bde4b03128,
