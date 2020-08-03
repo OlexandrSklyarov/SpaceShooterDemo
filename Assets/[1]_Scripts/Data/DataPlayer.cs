@@ -8,8 +8,7 @@ namespace SA.SpaceShooter.Data
         #region Properties
 
         public GameObject Prefab => prefab;
-        public float Speed => speed;
-        public int MaxHP => maxHP;
+        public ShipParameters ShipPrameters => shipPrameters;
 
         #endregion
 
@@ -17,8 +16,7 @@ namespace SA.SpaceShooter.Data
         #region Var
 
         [SerializeField] GameObject prefab;
-        [SerializeField] [Range(0.1f, 20f)] float speed;
-        [SerializeField] [Range(1, 10)] int maxHP;
+        [SerializeField] ShipParameters shipPrameters;
 
         #endregion
     }

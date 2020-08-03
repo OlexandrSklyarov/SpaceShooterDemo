@@ -10,6 +10,7 @@ namespace SA.SpaceShooter.Data
         public DataPlayer DataPlayer => dataPlayer;
         public DataEnemy[] DataEnemys => dataEnemys;
         public DataAsteroid[] DataAsteroids => dataAsteroids;
+        public MapSize MapSize => mapSize;
 
         #endregion
 
@@ -19,6 +20,7 @@ namespace SA.SpaceShooter.Data
         [SerializeField] DataPlayer dataPlayer;
         [SerializeField] DataEnemy[] dataEnemys;
         [SerializeField] DataAsteroid[] dataAsteroids;
+        [SerializeField] MapSize mapSize;
 
         #endregion
     }

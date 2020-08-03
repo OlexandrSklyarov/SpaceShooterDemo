@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dac0602689843994b831a0a199ca94c7, type: 3}
   m_Name: DataPlayer
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2652032742477125738, guid: d9d00bbd63e3266bfb81026a0f686ae9, type: 3}
-  speed: 4
-  maxHP: 3
+  prefab: {fileID: 8285894885455724390, guid: d9d00bbd63e3266bfb81026a0f686ae9, type: 3}
+  shipPrameters:
+    speed: 20
+    maxRotateAngle: 5
+    mass: 1
+    drag: 15
+    angularDrag: 15
+    maxHP: 3
+    bulletPrefab: {fileID: 5453775551257245434, guid: dc864aa130cfff2a4a5b7fe636129e81,
+      type: 3}
+    shipDestroyVFX: {fileID: 0}

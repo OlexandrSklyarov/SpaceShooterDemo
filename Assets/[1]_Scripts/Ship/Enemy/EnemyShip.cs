@@ -6,6 +6,7 @@ namespace SA.SpaceShooter
 {
     public class EnemyShip : BaseShip
     {
+
         #region Var
 
 
@@ -22,6 +23,12 @@ namespace SA.SpaceShooter
         #region Update
 
         public override void Tick()
+        {
+            throw new System.NotImplementedException();
+        }
+
+
+        public override void FixedTick()
         {
             throw new System.NotImplementedException();
         }

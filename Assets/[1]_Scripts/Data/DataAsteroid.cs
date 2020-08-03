@@ -17,8 +17,8 @@ namespace SA.SpaceShooter.Data
         #region Var
 
         [SerializeField] GameObject prefab;
-        [SerializeField] [Range(0.1f, 20f)] float minSpeed;
-        [SerializeField] [Range(0.1f, 20f)] float maxSpeed;
+        [SerializeField] [Range(0.1f, 20f)] float minSpeed = 0.1f;
+        [SerializeField] [Range(0.1f, 20f)] float maxSpeed = 0.1f;
 
         #endregion
     }

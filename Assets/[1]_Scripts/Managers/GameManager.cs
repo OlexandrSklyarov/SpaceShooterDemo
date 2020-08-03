@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using SA.Pool;
-using SA.SpaceShooter.Data;
+﻿using SA.SpaceShooter.Data;
 using UnityEngine;
 using Zenject;
 
@@ -13,12 +9,8 @@ namespace SA.SpaceShooter
         #region Var
        
         DataConfig config;
-
         SignalBus signalBus;
-
-        PlayerShip player;
-        EnemyController enemyController;
-        AsteroidGenerator asteroidGenerator;
+        UnitManager unitManager;
 
         #endregion
 
@@ -36,21 +28,14 @@ namespace SA.SpaceShooter
             this.config = config;
             this.signalBus = signalBus;
 
-            CreatePlayer(dataGame.DataPlayer, playerSpawnPoint);
+            unitManager = new UnitManager(  dataGame, 
+                                            playerSpawnPoint, 
+                                            enemySpawnPoints, 
+                                            asteroidSpawnPoints, 
+                                            signalBus);
         }
 
 
-        //создаём игрока через пул и настраиваем его
-        void CreatePlayer(DataPlayer dataPlayer, Transform playerSpawnPoint)
-        {
-            var go = BuildManager.GetInstance().Spawn(  PoolType.ENTITIES, 
-                                                        dataPlayer.Prefab, 
-                                                        playerSpawnPoint.position, 
-                                                        playerSpawnPoint.rotation, 
-                                                        null);
-            player = go.GetComponent<PlayerShip>();
-            player.Init(dataPlayer.Speed, dataPlayer.MaxHP, signalBus);
-        }
 
 
         #endregion
@@ -60,7 +45,13 @@ namespace SA.SpaceShooter
 
         void Update()
         {
-            player.Tick();
+            unitManager.Tick();
+        }
+
+
+        void FixedUpdate()
+        {
+            unitManager.FixedTick();
         }
 
         #endregion

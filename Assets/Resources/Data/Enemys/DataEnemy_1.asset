@@ -12,5 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e43d53613d269fad6842a5af8f716978, type: 3}
   m_Name: DataEnemy_1
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  speed: 0
+  prefab: {fileID: 5201802829679645203, guid: a4dabad2dd5feaec4ae97445c1bc9792, type: 3}
+  shipPrameters:
+    speed: 3
+    rotateSpeed: 3
+    maxRotateAngle: 20
+    mass: 5
+    drag: 3
+    angularDrag: 3
+    maxHP: 1

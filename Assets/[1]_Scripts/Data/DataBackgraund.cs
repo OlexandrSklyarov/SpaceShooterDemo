@@ -15,8 +15,8 @@ namespace SA.SpaceShooter.Data
 
         #region Var
 
-        [SerializeField] [Range(0.1f, 60f)] float scrollSpeed;
-        [SerializeField] [Range(1f, 500f)] float tileSize;
+        [SerializeField] [Range(0.1f, 60f)] float scrollSpeed = 0.1f;
+        [SerializeField] [Range(1f, 500f)] float tileSize = 1f;
 
         #endregion
     }

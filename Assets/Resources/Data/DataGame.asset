@@ -13,5 +13,17 @@ MonoBehaviour:
   m_Name: DataGame
   m_EditorClassIdentifier: 
   dataPlayer: {fileID: 11400000, guid: da32679e4b48779a7bb45ca4f249f884, type: 2}
-  dataEnemys: []
-  dataAsteroids: []
+  dataEnemys:
+  - {fileID: 11400000, guid: 7997cde8ecb08ca64be0c1ec06a70034, type: 2}
+  - {fileID: 11400000, guid: 735dc5e26070c6416a712c06d483cf99, type: 2}
+  - {fileID: 11400000, guid: 7b21da209b2531c1fbebfd3151282a87, type: 2}
+  - {fileID: 11400000, guid: 010684ff3a3ba05648735ac419943728, type: 2}
+  dataAsteroids:
+  - {fileID: 11400000, guid: 9b292c5866c620321b4bcf1e32cd331a, type: 2}
+  - {fileID: 11400000, guid: 61a4e01dd9f93e20aa774cfad751ae21, type: 2}
+  - {fileID: 11400000, guid: b1b7bb736ad42dd9281ff99514789108, type: 2}
+  mapSize:
+    up: 20
+    down: -20
+    left: -10
+    right: 10
