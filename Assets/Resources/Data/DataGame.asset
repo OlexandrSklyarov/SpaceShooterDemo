@@ -27,3 +27,5 @@ MonoBehaviour:
     down: -20
     left: -10
     right: 10
+  spawnEnemyCoooldown: 3
+  spawnAsteroidsCoooldown: 2

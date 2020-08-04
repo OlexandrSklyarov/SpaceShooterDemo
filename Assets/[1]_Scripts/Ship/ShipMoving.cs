@@ -36,6 +36,13 @@ namespace SA.SpaceShooter.Ship
             rb.rotation = Quaternion.Euler(0f, 0f, rb.velocity.x * -prm.MaxRotateAngle);
         }
 
+
+        public float GetManeuverValue(float targetManeuver, float speed)
+        {
+            return Mathf.MoveTowards(rb.velocity.x, targetManeuver, speed * Time.deltaTime);
+
+        }
+
         #endregion
     }
 }

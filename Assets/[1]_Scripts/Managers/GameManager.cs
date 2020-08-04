@@ -6,11 +6,22 @@ namespace SA.SpaceShooter
 {
     public class GameManager : MonoBehaviour
     {
+        #region Data
+
+        enum GameMode { PAUSE, GAME }
+
+        #endregion
+
+
         #region Var
-       
+
         DataConfig config;
         SignalBus signalBus;
-        UnitManager unitManager;
+
+        UnitManager unitManager; 
+        AsteroidGenerator asteroidGenerator;
+
+        GameMode gameMode;
 
         #endregion
 
@@ -30,13 +41,13 @@ namespace SA.SpaceShooter
 
             unitManager = new UnitManager(  dataGame, 
                                             playerSpawnPoint, 
-                                            enemySpawnPoints, 
-                                            asteroidSpawnPoints, 
+                                            enemySpawnPoints,  
                                             signalBus);
+           
+            asteroidGenerator = new AsteroidGenerator(dataGame, asteroidSpawnPoints);
+
+            gameMode = GameMode.GAME;
         }
-
-
-
 
         #endregion
 
@@ -45,13 +56,24 @@ namespace SA.SpaceShooter
 
         void Update()
         {
+            if (!IsGame()) return;
+
             unitManager.Tick();
+            asteroidGenerator.Tick();
         }
 
 
         void FixedUpdate()
         {
+            if (!IsGame()) return;
+
             unitManager.FixedTick();
+        }
+
+
+        bool IsGame()
+        {
+            return gameMode == GameMode.GAME;
         }
 
         #endregion

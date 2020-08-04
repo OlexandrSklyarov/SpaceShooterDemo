@@ -1,4 +1,6 @@
-﻿using SA.Pool;
+﻿using System;
+using System.Collections.Generic;
+using SA.Pool;
 using SA.SpaceShooter;
 using SA.SpaceShooter.Data;
 using SA.SpaceShooter.Ship;
@@ -12,12 +14,13 @@ public class UnitManager
     DataGame dataGame;
     Transform playerSpawnPoint;
     Transform enemySpawnPoints;
-    Transform asteroidSpawnPoints;
     SignalBus signalBus;
+    
+    List<BaseShip> ships;
 
-    BaseShip player;
-    EnemyController enemyController;
-    AsteroidGenerator asteroidGenerator;
+    float lastSpawnTime;
+
+    bool isInit;
 
     #endregion
 
@@ -27,30 +30,18 @@ public class UnitManager
     public UnitManager( DataGame dataGame, 
                         Transform playerSpawnPoint, 
                         Transform enemySpawnPoints, 
-                        Transform asteroidSpawnPoints, 
                         SignalBus signalBus)
     {
         this.dataGame = dataGame;
         this.playerSpawnPoint = playerSpawnPoint;
         this.enemySpawnPoints = enemySpawnPoints;
-        this.asteroidSpawnPoints = asteroidSpawnPoints;
         this.signalBus = signalBus;
 
+        ships = new List<BaseShip>();
+
         CreatePlayer();
-        CreateEnemyController();
-        CreateAsteroidController();
-    }
 
-
-    private void CreateAsteroidController()
-    {
-
-    }
-
-
-    private void CreateEnemyController()
-    {
-
+        isInit = true;
     }
 
 
@@ -62,8 +53,17 @@ public class UnitManager
                                                     playerSpawnPoint.position,
                                                     playerSpawnPoint.rotation,
                                                     null);
-        player = go.GetComponent<BaseShip>();
+
+        var player = go.GetComponent<PlayerShip>();
         player.Init(dataGame.DataPlayer.ShipPrameters, dataGame.MapSize, signalBus);
+
+        //подписываемся на удаление данного коробля из списка
+        player.OnShipDestroy += (ship) =>
+        {
+            ships.Remove(ship);
+        };
+
+        ships.Add(player);
     }
 
 
@@ -74,13 +74,94 @@ public class UnitManager
 
     public void Tick() 
     {
-        player.Tick();
+        if (!isInit) return;
+
+        GenerateEnemy();
+
+        for (int i = 0; i < ships.Count; i++)
+        {
+            ships[i].Tick();
+        }
     }
 
 
     public void FixedTick() 
     {
-        player.FixedTick();
+        if (!isInit) return;
+
+        for (int i = 0; i < ships.Count; i++)
+        {
+            ships[i].FixedTick();
+        }
+    }
+
+    #endregion
+
+
+    #region Spawn
+
+    void GenerateEnemy()
+    {
+        if (IsTimeEnd(ref lastSpawnTime, dataGame.SpawnEnemyCoooldown))
+        {
+            var enemyShip = CreateEnemyShip();
+
+            //подписываемся на удаление данного коробля из списка
+            enemyShip.OnShipDestroy += (ship) =>
+            {
+                ships.Remove(ship);
+            };
+
+            ships.Add(enemyShip);
+        }
+    }
+
+
+    //истекло ли currentTime
+    bool IsTimeEnd(ref float curentTime, float timer)
+    {
+        if (Time.time > curentTime)
+        {
+            curentTime = Time.time + timer;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    BaseShip CreateEnemyShip()
+    {
+        var enemyData = RandomEnemyData();
+
+        Transform pointIndex = RandomSpawnPoint();
+
+        var go = BuildManager.GetInstance().Spawn( PoolType.ENTITIES,
+                                                   enemyData.Prefab,
+                                                   pointIndex.position,
+                                                   pointIndex.rotation,
+                                                   null);
+
+        var ship = go.GetComponent<EnemyShip>();
+        ship.Init(enemyData.ShipPrameters, dataGame.MapSize, signalBus, enemyData.EnemyParameters);
+
+        return ship;
+    }
+
+
+    //возвращает данные случайного врага
+    DataEnemy RandomEnemyData()
+    {
+        int enemyIndex = UnityEngine.Random.Range(0, dataGame.DataEnemys.Length);
+        return dataGame.DataEnemys[enemyIndex];
+    }
+
+
+    //возвращает случайную spawn точку
+    Transform RandomSpawnPoint()
+    {
+        int index = UnityEngine.Random.Range(0, enemySpawnPoints.childCount);
+        return enemySpawnPoints.GetChild(index);
     }
 
     #endregion

@@ -20,8 +20,8 @@ namespace SA.SpaceShooter
         Rigidbody rb;
         bool isPushed;
 
-        const float SPEED = 10f;
-        const double DESTROY_TIMER = 5d;
+        const float SPEED = 20f;
+        const double DESTROY_TIMER = 7d;
 
         #endregion
 
@@ -65,6 +65,7 @@ namespace SA.SpaceShooter
         void OnTriggerEnter(Collider other)
         {
             if (!isPushed) return;
+            if (other.gameObject.GetComponent<Bullet>()) return;
 
             var target = other.gameObject.GetComponent<ITarget>();
 

@@ -1,4 +1,5 @@
-﻿using SA.Pool;
+﻿using System;
+using SA.Pool;
 using UnityEngine;
 using Zenject;
 using IPoolable = SA.Pool.IPoolable;
@@ -48,6 +49,13 @@ namespace SA.SpaceShooter.Ship
         #endregion
 
 
+        #region Events
+
+        public event Action<BaseShip> OnShipDestroy;
+
+        #endregion
+
+
         #region Init
 
         void Awake()
@@ -57,7 +65,7 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-        public virtual void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
+        protected void ShipInit(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
         {
             this.prm = prm;
             currentHP = prm.MaxHP;
@@ -99,7 +107,19 @@ namespace SA.SpaceShooter.Ship
 
         void SelfDestroy()
         {
+            OnShipDestroy?.Invoke(this);
+            CreateDestroyVFX();
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+        }
+
+
+        void CreateDestroyVFX()
+        {
+            BuildManager.GetInstance().Spawn(   PoolType.VFX, 
+                                                prm.ShipDestroyVFX, 
+                                                myTR.position, 
+                                                myTR.rotation, 
+                                                null);
         }
 
         #endregion

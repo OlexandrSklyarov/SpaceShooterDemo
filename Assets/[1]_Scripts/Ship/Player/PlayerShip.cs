@@ -7,9 +7,10 @@ namespace SA.SpaceShooter.Ship
     {
         #region Init
 
-        public override void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
+        public void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
         {
-            base.Init(prm, mapSize, signalBus);
+            ShipInit(prm, mapSize, signalBus);
+
             TargetType = Target.PLAYER;
         }
               
