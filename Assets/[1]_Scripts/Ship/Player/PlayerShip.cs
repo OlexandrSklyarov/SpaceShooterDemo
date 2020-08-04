@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Zenject;
 
-namespace SA.SpaceShooter
+namespace SA.SpaceShooter.Ship
 {
     public class PlayerShip : BaseShip
     {
@@ -9,7 +9,8 @@ namespace SA.SpaceShooter
 
         public override void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
         {
-            base.Init(prm, mapSize, signalBus);           
+            base.Init(prm, mapSize, signalBus);
+            TargetType = Target.PLAYER;
         }
               
 
@@ -37,7 +38,7 @@ namespace SA.SpaceShooter
         {
             if (isFire)
             {
-                Attack(Bullet.Target.OTHER);
+                shipWeapon.Attack(Target.OTHER);
             }
         }
 
@@ -55,8 +56,8 @@ namespace SA.SpaceShooter
 
         public override void FixedTick()
         {
-            Rotation();
-            Move();
+            shipMoving.Rotation();
+            shipMoving.Move(horizontal, vertical);
             Bound();
         }
 

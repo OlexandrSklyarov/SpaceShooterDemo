@@ -47,7 +47,7 @@ public class BuildManager
         GameObject go = null;
 
         //если префаб можно создать через POOL
-        if (prefab.GetType() == typeof(IPoolable)) //pool
+        if (prefab.GetComponent<IPoolable>() is IPoolable) //pool
         {
             go = PoolSpawn(id, prefab, pos, rot, parent);
         }
@@ -74,7 +74,7 @@ public class BuildManager
 
     public void Despawn(PoolType id, GameObject go)
     {
-        if (go.GetType() == typeof(IPoolable)) // возврат в pool 
+        if (go.GetComponent<IPoolable>() is IPoolable) // возврат в pool 
         {
             PoolManager.GetInstance().Despawn(id, go);
         }

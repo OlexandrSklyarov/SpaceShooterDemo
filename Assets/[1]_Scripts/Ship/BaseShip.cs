@@ -3,10 +3,10 @@ using UnityEngine;
 using Zenject;
 using IPoolable = SA.Pool.IPoolable;
 
-namespace SA.SpaceShooter
+namespace SA.SpaceShooter.Ship
 {
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class BaseShip : MonoBehaviour, IHealth, IPoolable
+    public abstract class BaseShip : MonoBehaviour, IHealth, IPoolable, ITarget
     {
         #region Properties
 
@@ -22,6 +22,8 @@ namespace SA.SpaceShooter
 
         public int PoolID { get; set; }
 
+        public Target TargetType {get; protected set;}
+
         #endregion
 
 
@@ -34,14 +36,14 @@ namespace SA.SpaceShooter
         protected Rigidbody rb;
         protected ShipParameters prm;
         protected MapSize mapSize;
+        protected ShipMoving shipMoving;
+        protected ShipWeapon shipWeapon;
 
         protected int currentHP;
 
         protected float horizontal;
         protected float vertical;
         protected bool isFire;
-
-        protected float lastFireTime;
 
         #endregion
 
@@ -63,7 +65,11 @@ namespace SA.SpaceShooter
             this.mapSize = mapSize;
 
             InitRB();
+
+            shipMoving = new ShipMoving(rb, prm);
+            shipWeapon = new ShipWeapon(prm, firePoints);
         }
+
 
         void InitRB()
         {
@@ -80,47 +86,7 @@ namespace SA.SpaceShooter
         public abstract void Tick();
         public abstract void FixedTick();
 
-        #endregion
-
-
-        #region Moving
-
-        protected void Move()
-        {
-            rb.velocity = new Vector3(horizontal, 0f, vertical) * prm.Speed;
-        }
-
-
-        protected void Rotation()
-        {
-            rb.rotation = Quaternion.Euler(0f, 0f, rb.velocity.x * -prm.MaxRotateAngle);
-        }
-
-        #endregion
-
-
-        #region Attack
-
-        protected void Attack(Bullet.Target target)
-        {
-            if (Time.time < lastFireTime) return;
-
-            //делаев выстрел со всех точек
-            foreach(var point in firePoints)
-            {
-                var go = BuildManager.GetInstance().Spawn(PoolType.ENTITIES,
-                                                    prm.BulletPrefab,
-                                                    point.position,
-                                                    point.rotation,
-                                                    null);
-
-                go.GetComponent<Bullet>().Push(point.forward, target);
-            }
-
-            lastFireTime = Time.time + prm.FireCooldown;
-        }
-
-        #endregion
+        #endregion      
 
 
         #region Damage

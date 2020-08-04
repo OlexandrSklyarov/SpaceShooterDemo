@@ -1,6 +1,7 @@
 ﻿using SA.Pool;
 using SA.SpaceShooter;
 using SA.SpaceShooter.Data;
+using SA.SpaceShooter.Ship;
 using UnityEngine;
 using Zenject;
 

@@ -7,13 +7,6 @@ namespace SA.SpaceShooter
     [RequireComponent(typeof(Rigidbody))]
     public class Bullet : MonoBehaviour, IPoolable
     {
-        #region Data
-
-        public enum Target { PLAYER, OTHER }
-
-        #endregion
-
-
         #region Properties
 
         public int PoolID { get; set; }
@@ -73,18 +66,17 @@ namespace SA.SpaceShooter
         {
             if (!isPushed) return;
 
-            if (bulletTarget == Target.PLAYER && other.GetType() == typeof(PlayerShip))
-            {
-                other.gameObject.GetComponent<IHealth>()?.Damage();
-                SelfDestroy();
-            }
-            else if (bulletTarget == Target.OTHER && other.GetType() != typeof(PlayerShip)) 
-            {
-                other.gameObject.GetComponent<IHealth>()?.Damage();
-                SelfDestroy();
-            }
+            var target = other.gameObject.GetComponent<ITarget>();
 
-            Debug.Log($"Collision {other.name}");
+            if (target != null)
+            {
+                if (bulletTarget == target.TargetType)
+                {
+                    other.gameObject.GetComponent<IHealth>()?.Damage();
+                    SelfDestroy();
+                    Debug.Log("damage player");
+                }
+            }
         }
 
 
