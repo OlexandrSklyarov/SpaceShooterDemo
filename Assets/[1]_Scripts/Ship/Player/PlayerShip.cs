@@ -5,11 +5,19 @@ namespace SA.SpaceShooter.Ship
 {
     public class PlayerShip : BaseShip
     {
+        #region Var
+
+        protected float horizontal;
+        protected float vertical;
+
+        #endregion
+
+
         #region Init
 
-        public void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
+        public void Init(ShipParameters shipPrm, MapSize mapSize, SignalBus signalBus)
         {
-            ShipInit(prm, mapSize, signalBus);
+            ShipInit(shipPrm, mapSize, signalBus);
 
             TargetType = Target.PLAYER;
         }

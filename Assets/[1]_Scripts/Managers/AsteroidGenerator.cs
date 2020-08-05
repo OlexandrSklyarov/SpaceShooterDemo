@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using SA.SpaceShooter.Data;
+﻿using SA.SpaceShooter.Data;
 using UnityEngine;
 
 public class AsteroidGenerator : MonoBehaviour

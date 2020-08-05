@@ -16,6 +16,7 @@ namespace SA.SpaceShooter
 
         #region Var
 
+        CompositeDisposable compositDisposable;
         Target bulletTarget;
         Rigidbody rb;
         bool isPushed;
@@ -38,23 +39,25 @@ namespace SA.SpaceShooter
         {
             bulletTarget = target;
 
-            rb.drag = 0f;
+            rb.isKinematic = false;
             rb.AddForce(dir * SPEED, ForceMode.Impulse);
 
-            SelfDestroy(DESTROY_TIMER);
+            Deactivate(DESTROY_TIMER);
 
             isPushed = true;
         }
 
 
-        void SelfDestroy(double time)
+        void Deactivate(double time)
         {
+            compositDisposable = new CompositeDisposable();
+
             Observable.Timer(System.TimeSpan.FromSeconds(time)) // создаем timer Observable
             .Subscribe(_ =>
             { // подписываемся
                 BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
             })
-            .AddTo(this); // привязываем подписку к disposable
+            .AddTo(compositDisposable); // привязываем подписку к disposable
         }
 
         #endregion
@@ -97,10 +100,10 @@ namespace SA.SpaceShooter
         }
 
         public void OnDespawn()
-        {
-            rb.drag = Mathf.Infinity;
-            rb.velocity = Vector3.zero;
+        {           
+            rb.isKinematic = true;
             isPushed = false;
+            compositDisposable?.Dispose();
         }
 
         #endregion

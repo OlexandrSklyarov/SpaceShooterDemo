@@ -9,7 +9,7 @@ namespace SA.SpaceShooter.Data
 
         public GameObject Prefab => prefab;
         public ShipParameters ShipPrameters => shipPrameters;
-        public EnemyParameters EnemyParameters => enemyParameters;
+        public EnemyManeuverParameters EnemyParameters => enemyParameters;
 
         #endregion
 
@@ -18,7 +18,7 @@ namespace SA.SpaceShooter.Data
 
         [SerializeField] GameObject prefab;
         [SerializeField] ShipParameters shipPrameters;
-        [SerializeField] EnemyParameters enemyParameters;
+        [SerializeField] EnemyManeuverParameters enemyParameters;
 
         #endregion
     }

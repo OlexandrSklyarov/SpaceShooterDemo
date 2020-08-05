@@ -102,7 +102,7 @@ public class UnitManager
 
     void GenerateEnemy()
     {
-        if (IsTimeEnd(ref lastSpawnTime, dataGame.SpawnEnemyCoooldown))
+        if (Time.time > lastSpawnTime)
         {
             var enemyShip = CreateEnemyShip();
 
@@ -113,6 +113,8 @@ public class UnitManager
             };
 
             ships.Add(enemyShip);
+
+            lastSpawnTime = Time.time + dataGame.SpawnEnemyCoooldown;
         }
     }
 
@@ -134,12 +136,12 @@ public class UnitManager
     {
         var enemyData = RandomEnemyData();
 
-        Transform pointIndex = RandomSpawnPoint();
+        Transform spawnPoint = RandomSpawnPoint();
 
         var go = BuildManager.GetInstance().Spawn( PoolType.ENTITIES,
                                                    enemyData.Prefab,
-                                                   pointIndex.position,
-                                                   pointIndex.rotation,
+                                                   spawnPoint.position,
+                                                   spawnPoint.rotation,
                                                    null);
 
         var ship = go.GetComponent<EnemyShip>();

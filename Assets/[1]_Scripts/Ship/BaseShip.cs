@@ -16,8 +16,12 @@ namespace SA.SpaceShooter.Ship
             get { return currentHP; }
             private set
             {
-                currentHP = Mathf.Clamp(value, 0, prm.MaxHP);
-                if (currentHP <= 0) SelfDestroy();
+                currentHP = Mathf.Clamp(value, 0, shipPrm.MaxHP);
+                if (currentHP <= 0)
+                {
+                    CreateDestroyVFX();
+                    Deactivate(); 
+                }
             }
         }
 
@@ -35,15 +39,13 @@ namespace SA.SpaceShooter.Ship
         protected Transform myTR;
         protected SignalBus signalBus;
         protected Rigidbody rb;
-        protected ShipParameters prm;
+        protected ShipParameters shipPrm;
         protected MapSize mapSize;
         protected ShipMoving shipMoving;
         protected ShipWeapon shipWeapon;
 
         protected int currentHP;
 
-        protected float horizontal;
-        protected float vertical;
         protected bool isFire;
 
         #endregion
@@ -65,25 +67,25 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-        protected void ShipInit(ShipParameters prm, MapSize mapSize, SignalBus signalBus)
+        protected void ShipInit(ShipParameters shipPrm, MapSize mapSize, SignalBus signalBus)
         {
-            this.prm = prm;
-            currentHP = prm.MaxHP;
+            this.shipPrm = shipPrm;
+            currentHP = shipPrm.MaxHP;
             this.signalBus = signalBus;
             this.mapSize = mapSize;
 
             InitRB();
 
-            shipMoving = new ShipMoving(rb, prm);
-            shipWeapon = new ShipWeapon(prm, firePoints);
+            shipMoving = new ShipMoving(rb, shipPrm);
+            shipWeapon = new ShipWeapon(shipPrm, firePoints);
         }
 
 
         void InitRB()
         {
-            rb.mass = prm.Mass;
-            rb.drag = prm.Drag;
-            rb.angularDrag = prm.AngularDrag;
+            rb.mass = shipPrm.Mass;
+            rb.drag = shipPrm.Drag;
+            rb.angularDrag = shipPrm.AngularDrag;
         }
 
         #endregion
@@ -105,10 +107,9 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-        void SelfDestroy()
+        protected virtual void Deactivate()
         {
             OnShipDestroy?.Invoke(this);
-            CreateDestroyVFX();
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
@@ -116,9 +117,9 @@ namespace SA.SpaceShooter.Ship
         void CreateDestroyVFX()
         {
             BuildManager.GetInstance().Spawn(   PoolType.VFX, 
-                                                prm.ShipDestroyVFX, 
+                                                shipPrm.ShipDestroyVFX, 
                                                 myTR.position, 
-                                                myTR.rotation, 
+                                                Quaternion.identity, 
                                                 null);
         }
 

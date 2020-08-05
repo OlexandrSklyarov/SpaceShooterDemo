@@ -41,10 +41,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6995054713474709703}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3853d0cbc9455457aa82611d6b1a9b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 37443951f9c0f148cbf5987d7d7223d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeDestroy: 1
   particle: {fileID: 5551168300583714710}
 --- !u!1001 &5749282847989992810
 PrefabInstance:

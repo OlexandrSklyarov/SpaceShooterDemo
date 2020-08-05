@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using UniRx;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -9,26 +11,25 @@ namespace SA.SpaceShooter.Ship
     {
         #region Var
 
-        float lastFireTime;
+        EnemyManeuverParameters maneuverPrm;
+        CompositeDisposable compositeDisposable;
 
         float targetManeuver;
-
-        EnemyParameters enemyPrm;
 
         #endregion
 
 
         #region Init
 
-        public void Init(ShipParameters prm, MapSize mapSize, SignalBus signalBus, EnemyParameters enemyPrm)
+        public void Init(ShipParameters shipPrm, MapSize mapSize, SignalBus signalBus, EnemyManeuverParameters enemyPrm)
         {
-            ShipInit(prm, mapSize, signalBus);
+            ShipInit(shipPrm, mapSize, signalBus);
 
             TargetType = Target.OTHER;
-            this.enemyPrm = enemyPrm;
+            this.maneuverPrm = enemyPrm;
 
             //запускаем случайный манёвр корабля
-            StartCoroutine(TargetManeuver());
+            StartManeuverProcess();
         }
 
         #endregion
@@ -38,15 +39,19 @@ namespace SA.SpaceShooter.Ship
 
         public override void Tick()
         {
-            Fire();
+            shipWeapon.Attack(Target.PLAYER);
         }
 
 
         public override void FixedTick()
         {
-            //horizontal = shipMoving.GetManeuverValue(targetManeuver, enemyPrm.SpeedManeuver);
-            shipMoving.Move(horizontal, -prm.Speed);
+            //shipMoving.Rotation();           
+
+            var hor = shipMoving.GetManeuverValue(targetManeuver, maneuverPrm.SpeedManeuver);           
+            shipMoving.Move(hor, -shipPrm.Speed);
+
             BoundHorizontal();
+            CheckLeavingZone(mapSize.Down);
         }
 
 
@@ -61,51 +66,68 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-        void Fire()
+        //проверка, если корабль вышел из зоны видимости, деактивировать его
+        void CheckLeavingZone(float value)
         {
-            if (IsTimeEnd(ref lastFireTime, prm.FireCooldown))
+            if (rb.position.z < value)
             {
-                shipWeapon.Attack(Target.PLAYER);
+                Deactivate();
             }
         }
-           
 
-        //задаёт направление манёвра корабля в случайное время
-        IEnumerator TargetManeuver()
+
+        //задаёт направление манёвра корабля
+        void StartManeuverProcess()
         {
-            //задержка перед стартом манёвра
-            var rndTimer = Random.Range(0f, enemyPrm.StartManeuverTime);
-            yield return new WaitForSeconds(rndTimer);
-
-            while (true)
+            ActionTimer(Random.Range(maneuverPrm.StartManeuverTime.x, maneuverPrm.StartManeuverTime.y), () =>
             {
-                //устанавливаем диапазон манёвра
-                targetManeuver = Random.Range(1f, enemyPrm.DodgeRange) * -Mathf.Sign(myTR.position.x);
+                ExecuteManeuver();
+            });
+        }
 
-                //выполняем манёвр пока не истечёт время
-                var maneuverTime = Random.Range(0.1f, enemyPrm.StartManeuverTime);
-                yield return new WaitForSeconds(maneuverTime);
 
+        void ExecuteManeuver()
+        {
+            //устанавливаем диапазон манёвра
+            var side = (myTR.position.x >= 0f) ? -1 : 1f;
+            targetManeuver = Random.Range(1f, maneuverPrm.DodgeRange) * side;
+
+            ActionTimer(Random.Range(maneuverPrm.ManeuverTime.x, maneuverPrm.ManeuverTime.y), () =>
+            {
                 //обнуляем значение манёвра
                 targetManeuver = 0f;
 
-                //ставим на паузу перед следующим манёвром
-                var puuseTime = Random.Range(0.5f, enemyPrm.ManeuverTime);
-                yield return new WaitForSeconds(puuseTime);
-            }
+                ActionTimer(Random.Range(maneuverPrm.PauseManeuverTime.x, maneuverPrm.PauseManeuverTime.y), () =>
+                {
+                    ExecuteManeuver();
+                });
+            });
         }
 
 
-        //истекло ли currentTime
-        bool IsTimeEnd(ref float curentTime, float timer)
-        {
-            if (Time.time > curentTime)
-            {
-                curentTime = Time.time + timer;
-                return true;
-            }
 
-            return false;
+        void ActionTimer(double time, Action act)
+        {
+            compositeDisposable = new CompositeDisposable();
+
+            Observable.Timer(System.TimeSpan.FromSeconds(time)) // создаем timer Observable
+            .Subscribe(_ =>
+            { // подписываемся
+                act?.Invoke();
+            })
+            .AddTo(compositeDisposable); // привязываем подписку к disposable
+        }
+
+        #endregion
+
+
+        #region Destroy
+
+        protected override void Deactivate()
+        {
+            base.Deactivate();
+
+            compositeDisposable?.Dispose();
         }
 
         #endregion
