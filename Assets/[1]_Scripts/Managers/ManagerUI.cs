@@ -1,18 +1,54 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using SA.SpaceShooter.Data;
 using UnityEngine;
+using UnityEngine.UI;
+using Zenject;
 
-public class ManagerUI : MonoBehaviour
+namespace SA.SpaceShooter.UI
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ManagerUI : MonoBehaviour
     {
-        
-    }
+        #region Var
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField] GameObject mobileJoystick;
+        [SerializeField] GameObject fireButton;
+
+        DataConfig config;
+        SignalBus signalBus;
+
+        UnitManager unitManager;
+        AsteroidGenerator asteroidGenerator;
+
+        #endregion
+
+
+        #region Init
+
+        [Inject]
+        public void Construct(DataConfig config, SignalBus signalBus)
+        {
+            this.config = config;
+            this.signalBus = signalBus;
+
+            InitInputButton();
+        }
+
+        #endregion
+
+
+        #region Input panel
+
+        void InitInputButton()
+        {
+
+#if UNITY_EDITOR
+            mobileJoystick.SetActive(false);
+            fireButton.SetActive(false);
+#endif
+
+        }
+
+        #endregion
     }
 }

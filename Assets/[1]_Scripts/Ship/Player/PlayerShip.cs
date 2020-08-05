@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SA.SpaceShooter.Input;
+using UnityEngine;
 using Zenject;
 
 namespace SA.SpaceShooter.Ship
@@ -7,8 +8,7 @@ namespace SA.SpaceShooter.Ship
     {
         #region Var
 
-        protected float horizontal;
-        protected float vertical;
+        PlayerInput input;
 
         #endregion
 
@@ -20,6 +20,8 @@ namespace SA.SpaceShooter.Ship
             ShipInit(shipPrm, mapSize, signalBus);
 
             TargetType = Target.PLAYER;
+
+            input = new PlayerInput();
         }
 
 
@@ -45,7 +47,7 @@ namespace SA.SpaceShooter.Ship
 
         void Fire()
         {
-            if (isFire)
+            if (input.IsFire)
             {
                 shipWeapon.Attack(Target.OTHER);
             }
@@ -58,7 +60,7 @@ namespace SA.SpaceShooter.Ship
 
         public override void Tick()
         {
-            GetInput();
+            input.Tick();
             Fire();
         }
 
@@ -66,27 +68,9 @@ namespace SA.SpaceShooter.Ship
         public override void FixedTick()
         {
             shipMoving.Rotation();
-            shipMoving.Move(horizontal, vertical);
+            shipMoving.Move(input.Horizontal, input.Vertical);
             Bound();
         }
-
-
-        void GetInput()
-        {
-
-#if UNITY_EDITOR
-
-            horizontal = Input.GetAxis(StaticPrm.Input.HORIZONTAL);
-            vertical = Input.GetAxis(StaticPrm.Input.VERTICAL);
-            isFire = Input.GetButton(StaticPrm.Input.FIRE);
-
-#elif UNITY_ANDROID
-
-            //mobile input
-
-#endif
-        }
-
 
         #endregion
     }

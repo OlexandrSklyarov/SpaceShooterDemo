@@ -24,10 +24,10 @@ MonoBehaviour:
       type: 3}
     bulletPrefab: {fileID: 5453775551257245434, guid: dc864aa130cfff2a4a5b7fe636129e81,
       type: 3}
-    fireCooldown: 0.4
+    fireCooldown: 1.61
   enemyParameters:
     startManeuverTime: {x: 0.5, y: 1}
-    maneuverTime: {x: 0.1, y: 2}
-    pauseManeuverTime: {x: 0.4, y: 1}
-    dodgeRange: 9.19
-    speedManeuver: 10
+    maneuverTime: {x: 0.1, y: 2.21}
+    pauseManeuverTime: {x: 0.4, y: 1.57}
+    dodgeRange: 5.28
+    speedManeuver: 7.76
