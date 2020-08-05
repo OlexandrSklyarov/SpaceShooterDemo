@@ -13,6 +13,7 @@ namespace SA.SpaceShooter.Data
         public MapSize MapSize => mapSize;
         public float SpawnEnemyCoooldown => spawnEnemyCoooldown;
         public float SpawnAsteroidsCoooldown => spawnAsteroidsCoooldown;
+        public float AsteroidsLifeTime => asteroidsLifeTime;
 
         #endregion
 
@@ -29,6 +30,7 @@ namespace SA.SpaceShooter.Data
 
         [Space]
         [SerializeField] [Range(0.1f, 10f)] float spawnAsteroidsCoooldown = 0.7f;
+        [SerializeField] [Range(2f, 10f)] float asteroidsLifeTime = 5f;
 
         #endregion
     }

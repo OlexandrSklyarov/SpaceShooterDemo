@@ -8,7 +8,7 @@ namespace SA.SpaceShooter
     {
         #region UI
 
-        public class OnPressedFireButton { }
+        public class OnPressedPauseButton { }
 
         #endregion
 

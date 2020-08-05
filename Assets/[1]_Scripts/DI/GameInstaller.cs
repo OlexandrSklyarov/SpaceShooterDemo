@@ -32,7 +32,7 @@ namespace SA.SpaceShooter
             SignalBusInstaller.Install(Container);
 
             //UI
-            Container.DeclareSignal<SignalGame.OnPressedFireButton>();
+            Container.DeclareSignal<SignalGame.OnPressedPauseButton>();
 
         }
 

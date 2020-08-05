@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 
 namespace SA.SpaceShooter.Ship
 {
-    public class EnemyShip : BaseShip
+    public class EnemyShip : BaseShip, IEnemy
     {
         #region Var
 
@@ -110,7 +110,7 @@ namespace SA.SpaceShooter.Ship
 
 
 
-        void ActionTimer(double time, Action act)
+        void ActionTimer(float time, Action act)
         {
             compositeDisposable = new CompositeDisposable();
 
@@ -132,6 +132,20 @@ namespace SA.SpaceShooter.Ship
             base.Deactivate();
 
             compositeDisposable?.Dispose();
+        }
+
+        #endregion
+
+
+        #region Collision
+
+        protected override void OnCollision(Collider other)
+        {
+            if (other.gameObject.GetComponent<PlayerShip>() is PlayerShip)
+            {
+                Debug.Log("Player Collision!!!");
+                Damage();
+            }
         }
 
         #endregion

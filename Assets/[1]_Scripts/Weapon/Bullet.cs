@@ -5,7 +5,7 @@ using UniRx;
 namespace SA.SpaceShooter
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Bullet : MonoBehaviour, IPoolable
+    public class Bullet : MonoActionTimer, IPoolable
     {
         #region Properties
 
@@ -16,13 +16,12 @@ namespace SA.SpaceShooter
 
         #region Var
 
-        CompositeDisposable compositDisposable;
         Target bulletTarget;
         Rigidbody rb;
         bool isPushed;
 
         const float SPEED = 20f;
-        const double DESTROY_TIMER = 7d;
+        const float DESTROY_TIMER = 7f;
 
         #endregion
 
@@ -42,22 +41,9 @@ namespace SA.SpaceShooter
             rb.isKinematic = false;
             rb.AddForce(dir * SPEED, ForceMode.Impulse);
 
-            Deactivate(DESTROY_TIMER);
+            ActionTimer(DESTROY_TIMER, ReturnToPool);
 
             isPushed = true;
-        }
-
-
-        void Deactivate(double time)
-        {
-            compositDisposable = new CompositeDisposable();
-
-            Observable.Timer(System.TimeSpan.FromSeconds(time)) // создаем timer Observable
-            .Subscribe(_ =>
-            { // подписываемся
-                BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
-            })
-            .AddTo(compositDisposable); // привязываем подписку к disposable
         }
 
         #endregion
@@ -77,22 +63,20 @@ namespace SA.SpaceShooter
                 if (bulletTarget == target.TargetType)
                 {
                     other.gameObject.GetComponent<IHealth>()?.Damage();
-                    SelfDestroy();
-                    Debug.Log("damage player");
+                    ReturnToPool();
                 }
             }
-        }
-
-
-        void SelfDestroy()
-        {
-            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
         #endregion
 
 
         #region Pool
+
+        void ReturnToPool()
+        {
+            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+        }
 
         public void OnSpawn()
         {
@@ -103,7 +87,7 @@ namespace SA.SpaceShooter
         {           
             rb.isKinematic = true;
             isPushed = false;
-            compositDisposable?.Dispose();
+            OnDispose();
         }
 
         #endregion

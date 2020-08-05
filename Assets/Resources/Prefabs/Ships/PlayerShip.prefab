@@ -41,7 +41,6 @@ GameObject:
   - component: {fileID: 8285894883994220656}
   - component: {fileID: 8285894883991248900}
   - component: {fileID: 8285894883991960478}
-  - component: {fileID: 8285894883994328535}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -110,20 +109,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &8285894883994328535
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8285894883994479910}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: f3b36b357c4760743ad6ab651571197f, type: 3}
 --- !u!1 &8285894885455724390
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,6 +120,7 @@ GameObject:
   - component: {fileID: 8285894885455724392}
   - component: {fileID: 8285894885455724391}
   - component: {fileID: 8285894885455724393}
+  - component: {fileID: 9122948938152888825}
   m_Layer: 0
   m_Name: PlayerShip
   m_TagString: Untagged
@@ -188,3 +174,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firePoints:
   - {fileID: 3062975815620965572}
+--- !u!136 &9122948938152888825
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8285894885455724390}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 1.56
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}

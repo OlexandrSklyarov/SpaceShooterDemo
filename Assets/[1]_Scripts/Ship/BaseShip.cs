@@ -126,17 +126,24 @@ namespace SA.SpaceShooter.Ship
         #endregion
 
 
+        #region Collision
+
+        void OnTriggerEnter(Collider other)
+        {
+            OnCollision(other);
+        }
+
+
+        protected abstract void OnCollision(Collider other);
+
+        #endregion
+
+
         #region Pool
 
-        public void OnSpawn()
-        {
+        public void OnSpawn() { }
 
-        }
-
-        public void OnDespawn()
-        {
-
-        }
+        public void OnDespawn() { }
 
         #endregion
     }

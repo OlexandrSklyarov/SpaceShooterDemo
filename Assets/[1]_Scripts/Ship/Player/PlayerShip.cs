@@ -72,6 +72,21 @@ namespace SA.SpaceShooter.Ship
             Bound();
         }
 
+
+
+        #endregion
+
+
+        #region Collision
+
+        protected override void OnCollision(Collider other)
+        {
+            if (other.gameObject.GetComponent<IEnemy>() is IEnemy)
+            {
+                Damage();
+             }
+        }
+
         #endregion
     }
 }

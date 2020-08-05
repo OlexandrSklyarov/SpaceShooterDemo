@@ -1,18 +1,82 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using SA.Pool;
+using SA.SpaceShooter.Ship;
 
-public class Asteroid : MonoBehaviour
+namespace SA.SpaceShooter
 {
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(Rigidbody))]
+    public class Asteroid : MonoActionTimer, IPoolable, IEnemy
     {
-        
-    }
+        #region Properties
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public int PoolID { get; set; }
+
+        #endregion
+
+
+        #region Var
+
+        [SerializeField] GameObject destroyVFX;
+
+        Rigidbody rb;      
+
+        #endregion
+
+
+        #region Init
+
+        void Awake()
+        {
+            rb = GetComponent<Rigidbody>();
+        }
+
+        public void Push(Vector3 force, float lifeTime)
+        {
+            ActionTimer(lifeTime, ReturnToPool);
+            rb.AddForce(force, ForceMode.VelocityChange);
+        }
+
+        #endregion
+
+
+        #region Collision
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.GetComponent<PlayerShip>() is PlayerShip)
+            {
+                CreateVFX();
+                ReturnToPool();
+            }
+        }
+
+
+        void CreateVFX()
+        {
+            BuildManager.GetInstance().Spawn(   PoolType.VFX,
+                                                destroyVFX,
+                                                transform.position,
+                                                Quaternion.identity,
+                                                null);
+        }
+
+        #endregion
+
+
+        #region Pool
+
+        void ReturnToPool()
+        {
+            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+        }
+
+        public void OnDespawn() { }
+
+        public void OnSpawn() 
+        {
+            OnDispose();
+        }
+
+        #endregion
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using SA.SpaceShooter.Data;
+﻿using SA.SpaceShooter.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
+using TMPro;
+using System.Text;
 
 namespace SA.SpaceShooter.UI
 {
@@ -11,14 +11,24 @@ namespace SA.SpaceShooter.UI
     {
         #region Var
 
-        [SerializeField] GameObject mobileJoystick;
-        [SerializeField] GameObject fireButton;
+        [Header("Input")]
+        [SerializeField] GameObject mobileInputPanel;
+
+        [Space]
+        [Header("TopPanel")]
+        [SerializeField] Button pauseButton;
+        [SerializeField] TextMeshProUGUI pointText;
+        [SerializeField] TextMeshProUGUI liveText;
+
 
         DataConfig config;
         SignalBus signalBus;
 
         UnitManager unitManager;
         AsteroidGenerator asteroidGenerator;
+
+        StringBuilder liveString;
+        StringBuilder pointString;
 
         #endregion
 
@@ -31,7 +41,8 @@ namespace SA.SpaceShooter.UI
             this.config = config;
             this.signalBus = signalBus;
 
-            InitInputButton();
+            InitMobileInput();
+            InitTopPanel();
         }
 
         #endregion
@@ -39,14 +50,48 @@ namespace SA.SpaceShooter.UI
 
         #region Input panel
 
-        void InitInputButton()
+        void InitMobileInput()
         {
 
 #if UNITY_EDITOR
-            mobileJoystick.SetActive(false);
-            fireButton.SetActive(false);
+            mobileInputPanel.SetActive(false);
 #endif
 
+        }
+
+        #endregion
+
+
+        #region Top panel
+
+        void InitTopPanel()
+        {
+            pauseButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnPressedPauseButton());
+            });
+
+            liveString = new StringBuilder();
+            pointString = new StringBuilder(); 
+
+            SetLiveText("0");
+            SetPointText("0");
+        }
+
+
+        void SetLiveText(string txt)
+        {
+            liveString.Clear();
+            liveString.Append(txt);
+            liveText.text = liveString.ToString();
+        }
+
+
+        void SetPointText(string txt)
+        {
+            pointString.Clear();
+            pointString.Append(txt);
+            pointText.text = pointString.ToString();
         }
 
         #endregion
