@@ -45,7 +45,7 @@ namespace SA.SpaceShooter.Ship
 
         public override void FixedTick()
         {
-            //shipMoving.Rotation();           
+            shipMoving.Rotation(180f);           
 
             var hor = shipMoving.GetManeuverValue(targetManeuver, maneuverPrm.SpeedManeuver);           
             shipMoving.Move(hor, -shipPrm.Speed);
@@ -54,6 +54,10 @@ namespace SA.SpaceShooter.Ship
             CheckLeavingZone(mapSize.Down);
         }
 
+        #endregion
+
+
+        #region Moving
 
         void BoundHorizontal()
         {

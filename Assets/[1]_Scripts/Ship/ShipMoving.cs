@@ -31,9 +31,9 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-        public void Rotation()
+        public void Rotation(float AngleY = 0f)
         {
-            rb.rotation = Quaternion.Euler(0f, 0f, rb.velocity.x * -prm.MaxRotateAngle);
+            rb.rotation = Quaternion.Euler(0f, AngleY, rb.velocity.x * -prm.MaxRotateAngle);
         }
 
 

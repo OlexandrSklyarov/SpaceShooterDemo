@@ -21,7 +21,7 @@ namespace SA.SpaceShooter.Ship
 
             TargetType = Target.PLAYER;
         }
-              
+
 
         #endregion
 
@@ -36,7 +36,7 @@ namespace SA.SpaceShooter.Ship
                 y = 0f,
                 z = Mathf.Clamp(rb.position.z, mapSize.Down, mapSize.Up),
             };
-        }       
+        }
 
         #endregion
 
@@ -88,6 +88,6 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-#endregion
+        #endregion
     }
 }
