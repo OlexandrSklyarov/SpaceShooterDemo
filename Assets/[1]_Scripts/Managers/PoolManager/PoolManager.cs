@@ -13,7 +13,7 @@ namespace SA.Pool
             get
             {
                 if (pools == null) return true;
-                return (pools.Count > 0) ? false : true;
+                return (pools.Count == 0);
             }
         }
 

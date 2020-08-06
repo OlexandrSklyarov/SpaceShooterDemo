@@ -69,8 +69,14 @@ namespace SA.SpaceShooter
             ActionTimer(lifeTime, ReturnToPool);
 
             rb.isKinematic = false;
-            //rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.AddForce(force, ForceMode.VelocityChange);
+            RandomRotate();
+        }
+
+
+        void RandomRotate()
+        {
+           rb.angularVelocity = UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.1f, 10f);
         }
 
         #endregion
@@ -124,7 +130,6 @@ namespace SA.SpaceShooter
 
         public void OnDespawn()
         {
-            //rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
             rb.isKinematic = true;
             OnDispose();
         }

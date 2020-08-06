@@ -4,6 +4,7 @@ using Zenject;
 using UnityEngine.SceneManagement;
 using UniRx;
 using System;
+using SA.Pool;
 
 namespace SA.SpaceShooter
 {
@@ -18,7 +19,7 @@ namespace SA.SpaceShooter
             {
                 _currentGameMode = value;
 
-                signalBus.Fire(new SignalGame.ChangeGameMode() { Mode = _currentGameMode});
+                signalBus.Fire(new SignalGame.ChangeGameMode() { Mode = _currentGameMode });
             }
         }
 
@@ -67,6 +68,8 @@ namespace SA.SpaceShooter
 
             Subscription();
 
+            PopulatePoolObjects();
+
             //стартуем создание игры с задержкой
             ActionTimer(0.1f, CreateGame);
         }
@@ -78,7 +81,7 @@ namespace SA.SpaceShooter
             signalBus.Subscribe((SignalGame.AddPoints s) =>
             {
                 points += s.PointSum;
-                signalBus.Fire(new SignalGame.UpdatePointSum() { Sum = points});
+                signalBus.Fire(new SignalGame.UpdatePointSum() { Sum = points });
             });
 
             //pause
@@ -126,6 +129,45 @@ namespace SA.SpaceShooter
 
             CurrentGameMode = GameMode.GAME;
             Time.timeScale = 1f;
+        }
+
+        #endregion
+
+
+        #region Pool
+
+        void PopulatePoolObjects()
+        {
+            int amount = 2;
+            int amountPerTick = 2;
+            int tickSize = 5;
+
+            var enemys = dataGame.DataEnemys;
+
+            for (int i = 0; i < enemys.Length; i++)
+            {               
+                PopulateEntitys(enemys[i].Prefab, amount, amountPerTick, tickSize);
+            }
+
+            var asteroids = dataGame.DataAsteroids;
+
+            for (int i = 0; i < asteroids.Length; i++)
+            {
+                PopulateEntitys(asteroids[i].Prefab, amount, amountPerTick, tickSize);
+            }
+
+        }
+
+
+        void PopulateEntitys(GameObject prefab, int amount, int amountPerTick, int tickSize)
+        {
+            PoolManager.GetInstance()
+                    .Addpool(PoolType.ENTITIES)
+                    .PopulateWith(prefab, amount, amountPerTick, tickSize)
+                    .OnCompletedPopulateEvent += () =>
+                    {
+                        Debug.Log("Populate entitys");
+                    };
         }
 
         #endregion

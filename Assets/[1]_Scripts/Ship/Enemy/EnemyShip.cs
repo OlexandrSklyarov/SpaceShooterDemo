@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using UniRx;
+﻿using System.Collections;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -12,19 +10,19 @@ namespace SA.SpaceShooter.Ship
         #region Var
 
         EnemyManeuverParameters maneuverPrm;
-        CompositeDisposable compositeDisposable;
 
         float targetManeuver;
         int incomePoints;
+        bool isMoneuverProcces;
 
         #endregion
 
 
         #region Init
 
-        public void Init(   ShipParameters shipPrm, 
-                            MapSize mapSize, 
-                            SignalBus signalBus, 
+        public void Init(ShipParameters shipPrm,
+                            MapSize mapSize,
+                            SignalBus signalBus,
                             EnemyManeuverParameters maneuverPrm,
                             int incomePoints)
         {
@@ -35,7 +33,7 @@ namespace SA.SpaceShooter.Ship
             this.incomePoints = incomePoints;
 
             //запускаем случайный манёвр корабля
-            StartManeuverProcess();
+            StartCoroutine( StartManeuverProcess() );
         }
 
         #endregion
@@ -51,9 +49,9 @@ namespace SA.SpaceShooter.Ship
 
         public override void FixedTick()
         {
-            shipMoving.Rotation(180f);           
+            shipMoving.Rotation(180f);
 
-            var hor = shipMoving.GetManeuverValue(targetManeuver, maneuverPrm.SpeedManeuver);           
+            var hor = shipMoving.GetManeuverValue(targetManeuver, maneuverPrm.SpeedManeuver);
             shipMoving.Move(hor, -shipPrm.Speed);
 
             BoundHorizontal();
@@ -87,44 +85,33 @@ namespace SA.SpaceShooter.Ship
 
 
         //задаёт направление манёвра корабля
-        void StartManeuverProcess()
+        IEnumerator StartManeuverProcess()
         {
-            ActionTimer(Random.Range(maneuverPrm.StartManeuverTime.x, maneuverPrm.StartManeuverTime.y), () =>
+            isMoneuverProcces = true;
+
+            var startDeley = Random.Range(maneuverPrm.StartManeuverTime.x,
+                                            maneuverPrm.StartManeuverTime.y);
+
+            yield return new WaitForSeconds(startDeley);
+
+            while (isMoneuverProcces)
             {
-                ExecuteManeuver();
-            });
-        }
+                //устанавливаем диапазон манёвра
+                var side = (myTR.position.x >= 0f) ? -1 : 1f;
+                targetManeuver = Random.Range(1f, maneuverPrm.DodgeRange) * side;
 
+                var timeManeuver = Random.Range(maneuverPrm.ManeuverTime.x, maneuverPrm.ManeuverTime.y);
 
-        void ExecuteManeuver()
-        {
-            //устанавливаем диапазон манёвра
-            var side = (myTR.position.x >= 0f) ? -1 : 1f;
-            targetManeuver = Random.Range(1f, maneuverPrm.DodgeRange) * side;
+                yield return new WaitForSeconds(timeManeuver);
 
-            ActionTimer(Random.Range(maneuverPrm.ManeuverTime.x, maneuverPrm.ManeuverTime.y), () =>
-            {
                 //обнуляем значение манёвра
                 targetManeuver = 0f;
 
-                ActionTimer(Random.Range(maneuverPrm.PauseManeuverTime.x, maneuverPrm.PauseManeuverTime.y), () =>
-                {
-                    ExecuteManeuver();
-                });
-            });
-        }
+                var timePause = Random.Range(maneuverPrm.PauseManeuverTime.x,
+                                                maneuverPrm.PauseManeuverTime.y);
 
-
-        void ActionTimer(float time, Action act)
-        {
-            compositeDisposable = new CompositeDisposable();
-
-            Observable.Timer(System.TimeSpan.FromSeconds(time)) // создаем timer Observable
-            .Subscribe(_ =>
-            { // подписываемся
-                act?.Invoke();
-            })
-            .AddTo(compositeDisposable); // привязываем подписку к disposable
+                yield return new WaitForSeconds(timePause);
+            }
         }
 
         #endregion
@@ -141,15 +128,12 @@ namespace SA.SpaceShooter.Ship
 
         protected override void Deactivate()
         {
-            OnDispose();
+            isMoneuverProcces = false;
             base.Deactivate();
         }
 
 
-        void OnDispose()
-        {
-            compositeDisposable?.Dispose();
-        }
+
 
         #endregion
 
@@ -184,7 +168,7 @@ namespace SA.SpaceShooter.Ship
 
         void OnDestroy()
         {
-            OnDispose();
+            isMoneuverProcces = false;
         }
 
         #endregion
