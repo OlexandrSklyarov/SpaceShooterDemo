@@ -32,8 +32,10 @@ namespace SA.SpaceShooter
             SignalBusInstaller.Install(Container);
 
             //UI
-            Container.DeclareSignal<SignalGame.OnPressedPauseButton>();
-            Container.DeclareSignal<SignalGame.OnPressedRestartButton>();
+            Container.DeclareSignal<SignalGame.OnClickPauseButton>();
+            Container.DeclareSignal<SignalGame.OnClickRestartButton>();
+            Container.DeclareSignal<SignalGame.OnClickContinueGameButton>();
+            Container.DeclareSignal<SignalGame.OnClickMainMenuButton>();
 
             //GameManager
             Container.DeclareSignal<SignalGame.ChangeGameMode>();

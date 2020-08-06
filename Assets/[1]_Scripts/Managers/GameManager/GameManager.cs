@@ -74,21 +74,35 @@ namespace SA.SpaceShooter
 
         void Subscription()
         {
+            //add points
             signalBus.Subscribe((SignalGame.AddPoints s) =>
             {
                 points += s.PointSum;
                 signalBus.Fire(new SignalGame.UpdatePointSum() { Sum = points});
-
             });
 
             //pause
-            signalBus.Subscribe((SignalGame.OnPressedPauseButton s) =>
+            signalBus.Subscribe((SignalGame.OnClickPauseButton s) =>
             {
-                CurrentGameMode = GameMode.PAUSE;
+                SetGameMode(GameMode.PAUSE);
+                Time.timeScale = 0f;
             });
 
-            //pause
-            signalBus.Subscribe((SignalGame.OnPressedRestartButton s) =>
+            //continue game
+            signalBus.Subscribe((SignalGame.OnClickContinueGameButton s) =>
+            {
+                SetGameMode(GameMode.GAME);
+                Time.timeScale = 1f;
+            });
+
+            //meinMenu
+            signalBus.Subscribe((SignalGame.OnClickMainMenuButton s) =>
+            {
+                LoadMeinMenu();
+            });
+
+            //restart game
+            signalBus.Subscribe((SignalGame.OnClickRestartButton s) =>
             {
                 GameRestart();
             });
@@ -96,9 +110,10 @@ namespace SA.SpaceShooter
             //palyer destroyed
             signalBus.Subscribe((SignalGame.PlayerDestroy s) =>
             {
-                CurrentGameMode = GameMode.STOP;
+                SetGameMode(GameMode.STOP);
             });
         }
+
 
         void CreateGame()
         {
@@ -110,6 +125,7 @@ namespace SA.SpaceShooter
             asteroidGenerator = new AsteroidGenerator(dataGame, asteroidSpawnPoints, signalBus);
 
             CurrentGameMode = GameMode.GAME;
+            Time.timeScale = 1f;
         }
 
         #endregion
@@ -145,9 +161,21 @@ namespace SA.SpaceShooter
 
         #region Game procces
 
+
+        void SetGameMode(GameMode mode)
+        {
+            CurrentGameMode = mode;
+        }
+
         void GameRestart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+
+        void LoadMeinMenu()
+        {
+            SceneManager.LoadScene(StaticPrm.Scene.MAIN_MENU);
         }
 
         #endregion

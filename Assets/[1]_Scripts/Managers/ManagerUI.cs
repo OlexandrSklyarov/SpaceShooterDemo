@@ -12,20 +12,25 @@ namespace SA.SpaceShooter.UI
     {
         #region Var
 
-        [Header("Input")]
+        [Header("GameInterface")]
         [SerializeField] GameObject mobileInputPanel;
 
         [Space]
-        [Header("TopPanel")]
+        [SerializeField] Canvas gameInterfaceCanvas;
         [SerializeField] Button pauseButton;
         [SerializeField] TextMeshProUGUI pointText;
         [SerializeField] TextMeshProUGUI liveText;
 
         [Space]
-        [Header("GameOverPanel")]
+        [Header("GameOver")]
+        [SerializeField] Canvas gameOverCanvas;
         [SerializeField] Button restartButton;
-        [SerializeField] GameObject gameOverPanel;
 
+        [Space]
+        [Header("pauseMenu")]
+        [SerializeField] Canvas pauseMenuCanvas;
+        [SerializeField] Button mainMenuButton;
+        [SerializeField] Button continueGameButton;
 
         DataConfig config;
         SignalBus signalBus;
@@ -53,6 +58,7 @@ namespace SA.SpaceShooter.UI
             InitMobileInput();
             InitTopPanel();
             InitGameOverPanel();
+            InitPauseMenu();
 
             Subscription();
         }
@@ -66,13 +72,15 @@ namespace SA.SpaceShooter.UI
                 switch(s.Mode)
                 {
                     case GameMode.GAME:
-                        SetActiveGameOverPanel(false);
+                        EnabledGameOverCanvas(false);
+                        EnabledPauseMenuCanvas(false);
+                        EnabledGameInterfaceCanvas(true);
                         break;
                     case GameMode.PAUSE:
-                        Debug.Log("Show pause menu :)");
+                        EnabledPauseMenuCanvas(true);
                         break;
                     case GameMode.STOP:
-                        SetActiveGameOverPanel(true);
+                        EnabledGameOverCanvas(true);
                         break;
                 }
             });
@@ -101,15 +109,15 @@ namespace SA.SpaceShooter.UI
         {
             restartButton.onClick.AddListener(() =>
             {
-                signalBus.Fire(new SignalGame.OnPressedRestartButton());
+                signalBus.Fire(new SignalGame.OnClickRestartButton());
             });
 
-            SetActiveGameOverPanel(false);
+            EnabledGameOverCanvas(false);
         }
 
-        void SetActiveGameOverPanel(bool flag)
+        void EnabledGameOverCanvas(bool flag)
         {
-            gameOverPanel.SetActive(flag);
+            gameOverCanvas.enabled = flag;
         }
 
         #endregion
@@ -122,7 +130,7 @@ namespace SA.SpaceShooter.UI
         {
             pauseButton.onClick.AddListener(() =>
             {
-                signalBus.Fire(new SignalGame.OnPressedPauseButton());
+                signalBus.Fire(new SignalGame.OnClickPauseButton());
             });
 
             SetLiveText("0");
@@ -155,6 +163,39 @@ namespace SA.SpaceShooter.UI
             pointString.Clear();
             pointString.Append(txt);
             pointText.text = pointString.ToString();
+        }
+
+
+        void EnabledGameInterfaceCanvas(bool flag)
+        {
+            gameInterfaceCanvas.enabled = flag;
+        }
+
+        #endregion
+
+
+        #region Top panel
+
+        void InitPauseMenu()
+        {
+            continueGameButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnClickContinueGameButton());
+            });
+
+
+            mainMenuButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnClickMainMenuButton());
+            });
+
+            EnabledPauseMenuCanvas(false);
+        }
+
+
+        void EnabledPauseMenuCanvas(bool flag)
+        {
+            pauseMenuCanvas.enabled = flag;
         }
 
         #endregion

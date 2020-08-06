@@ -27,6 +27,7 @@ MonoBehaviour:
     down: -20
     left: -10
     right: 10
-  spawnEnemyCoooldown: 3
-  spawnAsteroidsCoooldown: 2
-  asteroidsLifeTime: 14.1
+  spawnEnemyCoooldown: 3.55
+  spawnAsteroidsCoooldown: 3.08
+  asteroidsLifeTime: 11.2
+  addPoints: 10

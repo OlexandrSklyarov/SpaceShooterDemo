@@ -24,7 +24,7 @@ MonoBehaviour:
       type: 3}
     bulletPrefab: {fileID: 5453775551257245434, guid: dc864aa130cfff2a4a5b7fe636129e81,
       type: 3}
-    fireCooldown: 1.95
+    fireCooldown: 2
   enemyParameters:
     startManeuverTime: {x: 0.5, y: 1}
     maneuverTime: {x: 0.1, y: 2.21}
