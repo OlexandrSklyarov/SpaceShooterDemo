@@ -141,8 +141,13 @@ namespace SA.SpaceShooter.Ship
 
         protected override void Deactivate()
         {
+            OnDispose();
             base.Deactivate();
+        }
 
+
+        void OnDispose()
+        {
             compositeDisposable?.Dispose();
         }
 
@@ -168,9 +173,18 @@ namespace SA.SpaceShooter.Ship
         {
             if (other.gameObject.GetComponent<PlayerShip>() is PlayerShip)
             {
-                Debug.Log("Player Collision!!!");
                 Damage();
             }
+        }
+
+        #endregion
+
+
+        #region Clear
+
+        void OnDestroy()
+        {
+            OnDispose();
         }
 
         #endregion

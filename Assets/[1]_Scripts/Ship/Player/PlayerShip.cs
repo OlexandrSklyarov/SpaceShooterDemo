@@ -94,8 +94,6 @@ namespace SA.SpaceShooter.Ship
             Bound();
         }
 
-
-
         #endregion
 
 

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using SA.Pool;
 using SA.SpaceShooter.Data;
 using UnityEngine;
@@ -15,6 +15,8 @@ namespace SA.SpaceShooter
         DataGame dataGame; 
         SignalBus signalBus;
 
+        List<Asteroid> asteroids;
+
         float lastPushTime;
 
         #endregion
@@ -27,6 +29,8 @@ namespace SA.SpaceShooter
             this.dataGame = dataGame;
             this.asteroidSpawnPoints = asteroidSpawnPoints;
             this.signalBus = signalBus;
+
+            asteroids = new List<Asteroid>();
         }
 
         #endregion
@@ -72,7 +76,12 @@ namespace SA.SpaceShooter
                                                         Quaternion.identity, 
                                                         null);
 
-            return go.GetComponent<Asteroid>();
+            //подписываемся на событие удаления и добавляем в список
+            var asteroid = go.GetComponent<Asteroid>();
+            asteroid.OnDestroyAsteroids += (ast) => asteroids.Remove(ast);
+            asteroids.Add(asteroid);
+
+            return asteroid;
         }
 
 
@@ -80,6 +89,27 @@ namespace SA.SpaceShooter
         {
             var index = UnityEngine.Random.Range(0, asteroidSpawnPoints.childCount);
             return asteroidSpawnPoints.GetChild(index);
+        }
+
+        #endregion
+
+
+        #region Clear
+
+        public void Clear()
+        {
+            if (asteroids != null)
+            {
+                for (int i = 0; i < asteroids.Count; i++)
+                {
+                    if (asteroids[i] != null)
+                    {
+                        UnityEngine.Object.Destroy(asteroids[i].gameObject);
+                    }
+                }
+
+                asteroids.Clear();
+            }
         }
 
         #endregion

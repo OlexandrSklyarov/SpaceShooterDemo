@@ -2,6 +2,7 @@
 using SA.Pool;
 using SA.SpaceShooter.Ship;
 using Zenject;
+using System;
 
 namespace SA.SpaceShooter
 {
@@ -29,6 +30,13 @@ namespace SA.SpaceShooter
             }
         }
         #endregion
+
+
+        #region Events
+
+        public event Action<Asteroid> OnDestroyAsteroids;
+
+        #endregion 
 
 
         #region Var
@@ -104,6 +112,9 @@ namespace SA.SpaceShooter
 
         void ReturnToPool()
         {
+            if (gameObject == null) return;
+
+            OnDestroyAsteroids?.Invoke(this);
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
@@ -125,5 +136,16 @@ namespace SA.SpaceShooter
         }
 
         #endregion
+
+
+        #region Clear
+
+        void OnDestroy()
+        {
+            OnDispose();
+        }
+
+        #endregion
+
     }
 }

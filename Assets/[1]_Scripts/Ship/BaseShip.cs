@@ -148,7 +148,7 @@ namespace SA.SpaceShooter.Ship
 
         protected void ReturnToPool()
         {
-            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+           BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
 
@@ -158,5 +158,6 @@ namespace SA.SpaceShooter.Ship
         public void OnDespawn() { }
 
         #endregion
+
     }
 }

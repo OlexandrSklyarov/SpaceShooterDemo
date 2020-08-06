@@ -103,5 +103,15 @@ namespace SA.SpaceShooter
         }
 
         #endregion
+
+
+        #region Clear
+
+        void OnDestroy()
+        {
+            OnDispose();
+        }
+
+        #endregion
     }
 }

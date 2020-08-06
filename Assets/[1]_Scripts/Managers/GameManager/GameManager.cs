@@ -171,6 +171,20 @@ namespace SA.SpaceShooter
 
         #region Exit
 
+        void ClearScene()
+        {
+            unitManager?.Clear();
+            asteroidGenerator?.Clear();
+            Pool.PoolManager.GetInstance().Dispose();
+        }
+
+
+        void OnDestroy()
+        {
+            ClearScene();
+        }
+
+
         void OnApplicationQuit()
         {
             Debug.Log("Quit");

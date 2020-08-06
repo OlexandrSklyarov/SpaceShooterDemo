@@ -172,4 +172,25 @@ public class UnitManager
     }
 
     #endregion
+
+
+    #region Clear
+
+    public void Clear()
+    {
+        if (ships != null)
+        {
+            for(int i = 0; i < ships.Count; i++)
+            {
+                if (ships[i] != null)
+                {
+                    UnityEngine.Object.Destroy(ships[i].gameObject);
+                }
+            }
+
+            ships.Clear();
+        }
+    }
+
+    #endregion
 }
