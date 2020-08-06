@@ -16,6 +16,8 @@ namespace SA.SpaceShooter
 
         #region Var
 
+        [SerializeField] GameObject destroyVFX;
+
         Target bulletTarget;
         Rigidbody rb;
         bool isPushed;
@@ -54,7 +56,6 @@ namespace SA.SpaceShooter
         void OnTriggerEnter(Collider other)
         {
             if (!isPushed) return;
-            if (other.gameObject.GetComponent<Bullet>()) return;
 
             var target = other.gameObject.GetComponent<ITarget>();
 
@@ -63,9 +64,20 @@ namespace SA.SpaceShooter
                 if (bulletTarget == target.TargetType)
                 {
                     other.gameObject.GetComponent<IHealth>()?.Damage();
+                    CreateVFX();
                     ReturnToPool();
                 }
             }
+        }
+
+
+        void CreateVFX()
+        {
+            BuildManager.GetInstance().Spawn(   PoolType.VFX,
+                                                destroyVFX,
+                                                transform.position,
+                                                Quaternion.identity,
+                                                null);
         }
 
         #endregion

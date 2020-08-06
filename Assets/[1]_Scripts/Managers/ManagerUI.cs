@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using Zenject;
 using TMPro;
 using System.Text;
+using System;
 
 namespace SA.SpaceShooter.UI
 {
@@ -19,6 +20,11 @@ namespace SA.SpaceShooter.UI
         [SerializeField] Button pauseButton;
         [SerializeField] TextMeshProUGUI pointText;
         [SerializeField] TextMeshProUGUI liveText;
+
+        [Space]
+        [Header("GameOverPanel")]
+        [SerializeField] Button restartButton;
+        [SerializeField] GameObject gameOverPanel;
 
 
         DataConfig config;
@@ -41,8 +47,35 @@ namespace SA.SpaceShooter.UI
             this.config = config;
             this.signalBus = signalBus;
 
+            liveString = new StringBuilder();
+            pointString = new StringBuilder();
+
             InitMobileInput();
             InitTopPanel();
+            InitGameOverPanel();
+
+            Subscription();
+        }
+
+
+        void Subscription()
+        {
+            //game mode
+            signalBus.Subscribe((SignalGame.ChangeGameMode s) =>
+            {
+                switch(s.Mode)
+                {
+                    case GameMode.GAME:
+                        SetActiveGameOverPanel(false);
+                        break;
+                    case GameMode.PAUSE:
+                        Debug.Log("Show pause menu :)");
+                        break;
+                    case GameMode.STOP:
+                        SetActiveGameOverPanel(true);
+                        break;
+                }
+            });
         }
 
         #endregion
@@ -62,6 +95,27 @@ namespace SA.SpaceShooter.UI
         #endregion
 
 
+        #region Game over panel
+
+        void InitGameOverPanel()
+        {
+            restartButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnPressedRestartButton());
+            });
+
+            SetActiveGameOverPanel(false);
+        }
+
+        void SetActiveGameOverPanel(bool flag)
+        {
+            gameOverPanel.SetActive(flag);
+        }
+
+        #endregion
+
+
+
         #region Top panel
 
         void InitTopPanel()
@@ -71,11 +125,20 @@ namespace SA.SpaceShooter.UI
                 signalBus.Fire(new SignalGame.OnPressedPauseButton());
             });
 
-            liveString = new StringBuilder();
-            pointString = new StringBuilder(); 
-
             SetLiveText("0");
             SetPointText("0");
+
+            //points
+            signalBus.Subscribe((SignalGame.UpdatePointSum s) =>
+            {
+                SetPointText(s.Sum.ToString());
+            });
+
+            //player HP
+            signalBus.Subscribe((SignalGame.ChangePlayerHP s) =>
+            {
+                SetLiveText(s.AmountHP.ToString());
+            });
         }
 
 

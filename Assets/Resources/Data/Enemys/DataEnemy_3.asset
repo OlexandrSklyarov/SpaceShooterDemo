@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 7036968086248108571, guid: d91b5f77aea35bbb280de4b4246ba8e1, type: 3}
   shipPrameters:
-    speed: 5
+    speed: 4
     maxRotateAngle: 10
     mass: 1
     drag: 40
     angularDrag: 25
     maxHP: 1
-    shipDestroyVFX: {fileID: 6995054713474709703, guid: 5b6eb1f0bad6f38c1a976b6bcbafb63c,
+    shipDestroyVFX: {fileID: 516385622828379938, guid: 234665ba2217c4a0db42b1141ace1643,
       type: 3}
     bulletPrefab: {fileID: 5453775551257245434, guid: dc864aa130cfff2a4a5b7fe636129e81,
       type: 3}
-    fireCooldown: 2
+    fireCooldown: 1.88
   enemyParameters:
     startManeuverTime: {x: 0.5, y: 1}
     maneuverTime: {x: 0.1, y: 2}
     pauseManeuverTime: {x: 0.4, y: 1}
     dodgeRange: 9.19
-    speedManeuver: 10
+    speedManeuver: 7

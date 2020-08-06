@@ -11,16 +11,15 @@ namespace SA.SpaceShooter.Ship
     {
         #region Properties
 
-        public int HP
+        public virtual int HP
         {
             get { return currentHP; }
-            private set
+            protected set
             {
                 currentHP = Mathf.Clamp(value, 0, shipPrm.MaxHP);
                 if (currentHP <= 0)
                 {
-                    CreateDestroyVFX();
-                    Deactivate(); 
+                    DestroyShip(); 
                 }
             }
         }
@@ -106,11 +105,17 @@ namespace SA.SpaceShooter.Ship
             HP--;
         }
 
+        protected virtual void DestroyShip()
+        {
+            CreateDestroyVFX();
+            Deactivate();
+        }
+
 
         protected virtual void Deactivate()
         {
             OnShipDestroy?.Invoke(this);
-            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+            ReturnToPool();
         }
 
 
@@ -141,7 +146,14 @@ namespace SA.SpaceShooter.Ship
 
         #region Pool
 
+        protected void ReturnToPool()
+        {
+            BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
+        }
+
+
         public void OnSpawn() { }
+
 
         public void OnDespawn() { }
 

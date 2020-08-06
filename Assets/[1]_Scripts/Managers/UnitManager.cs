@@ -145,7 +145,12 @@ public class UnitManager
                                                    null);
 
         var ship = go.GetComponent<EnemyShip>();
-        ship.Init(enemyData.ShipPrameters, dataGame.MapSize, signalBus, enemyData.EnemyParameters);
+
+        ship.Init(  enemyData.ShipPrameters, 
+                    dataGame.MapSize, 
+                    signalBus, 
+                    enemyData.EnemyParameters,
+                    dataGame.AddPoints);
 
         return ship;
     }

@@ -29,3 +29,4 @@ MonoBehaviour:
     right: 10
   spawnEnemyCoooldown: 3
   spawnAsteroidsCoooldown: 2
+  asteroidsLifeTime: 14.1

@@ -20,7 +20,7 @@ MonoBehaviour:
     drag: 15
     angularDrag: 15
     maxHP: 3
-    shipDestroyVFX: {fileID: 6995054713474709703, guid: 5b6eb1f0bad6f38c1a976b6bcbafb63c,
+    shipDestroyVFX: {fileID: 516385622828379938, guid: 234665ba2217c4a0db42b1141ace1643,
       type: 3}
     bulletPrefab: {fileID: 7470770332365401464, guid: 02277c5d1fab36b79a22e4ccd6ff1bec,
       type: 3}

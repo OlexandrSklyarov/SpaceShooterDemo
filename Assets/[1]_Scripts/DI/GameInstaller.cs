@@ -33,6 +33,16 @@ namespace SA.SpaceShooter
 
             //UI
             Container.DeclareSignal<SignalGame.OnPressedPauseButton>();
+            Container.DeclareSignal<SignalGame.OnPressedRestartButton>();
+
+            //GameManager
+            Container.DeclareSignal<SignalGame.ChangeGameMode>();
+
+            //player 
+            Container.DeclareSignal<SignalGame.AddPoints>();
+            Container.DeclareSignal<SignalGame.UpdatePointSum>();
+            Container.DeclareSignal<SignalGame.ChangePlayerHP>();
+            Container.DeclareSignal<SignalGame.PlayerDestroy>();
 
         }
 

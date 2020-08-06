@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: DataAsteroid_2
   m_EditorClassIdentifier: 
   prefab: {fileID: 7492919215623520591, guid: ac1f3c59cf8e9d106a671479055042ba, type: 3}
-  minSpeed: 20
-  maxSpeed: 20
+  minSpeed: 6.5
+  maxSpeed: 10.9

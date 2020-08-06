@@ -28,7 +28,7 @@ namespace SA.SpaceShooter
 
         #region Update
 
-        public void Update()
+        public void Tick()
         {
             //сдвигаем фон по оси Z
             myTR.position = new Vector3()

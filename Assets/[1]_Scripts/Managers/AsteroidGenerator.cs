@@ -2,6 +2,7 @@
 using SA.Pool;
 using SA.SpaceShooter.Data;
 using UnityEngine;
+using Zenject;
 
 namespace SA.SpaceShooter
 {
@@ -11,7 +12,8 @@ namespace SA.SpaceShooter
 
         DataAsteroid[] dataAsteroids;
         Transform asteroidSpawnPoints;
-        DataGame dataGame;
+        DataGame dataGame; 
+        SignalBus signalBus;
 
         float lastPushTime;
 
@@ -20,10 +22,11 @@ namespace SA.SpaceShooter
 
         #region Init
 
-        public AsteroidGenerator(DataGame dataGame, Transform asteroidSpawnPoints)
+        public AsteroidGenerator(DataGame dataGame, Transform asteroidSpawnPoints, SignalBus signalBus)
         {
             this.dataGame = dataGame;
             this.asteroidSpawnPoints = asteroidSpawnPoints;
+            this.signalBus = signalBus;
         }
 
         #endregion
@@ -49,7 +52,7 @@ namespace SA.SpaceShooter
             var asteroid = CreateAsteroid(data.Prefab, point);
 
             var speed = UnityEngine.Random.Range(data.MinSpeed, data.MinSpeed);
-            asteroid.Push(Vector3.back * speed, dataGame.AsteroidsLifeTime);
+            asteroid.Push(Vector3.back * speed, dataGame.AsteroidsLifeTime, dataGame.AddPoints, signalBus);
         }
 
 

@@ -15,18 +15,24 @@ namespace SA.SpaceShooter.Ship
         CompositeDisposable compositeDisposable;
 
         float targetManeuver;
+        int incomePoints;
 
         #endregion
 
 
         #region Init
 
-        public void Init(ShipParameters shipPrm, MapSize mapSize, SignalBus signalBus, EnemyManeuverParameters enemyPrm)
+        public void Init(   ShipParameters shipPrm, 
+                            MapSize mapSize, 
+                            SignalBus signalBus, 
+                            EnemyManeuverParameters maneuverPrm,
+                            int incomePoints)
         {
             ShipInit(shipPrm, mapSize, signalBus);
 
             TargetType = Target.OTHER;
-            this.maneuverPrm = enemyPrm;
+            this.maneuverPrm = maneuverPrm;
+            this.incomePoints = incomePoints;
 
             //запускаем случайный манёвр корабля
             StartManeuverProcess();
@@ -109,7 +115,6 @@ namespace SA.SpaceShooter.Ship
         }
 
 
-
         void ActionTimer(float time, Action act)
         {
             compositeDisposable = new CompositeDisposable();
@@ -127,11 +132,31 @@ namespace SA.SpaceShooter.Ship
 
         #region Destroy
 
+        protected override void DestroyShip()
+        {
+            SignalAddPoint();
+            base.DestroyShip();
+        }
+
+
         protected override void Deactivate()
         {
             base.Deactivate();
 
             compositeDisposable?.Dispose();
+        }
+
+        #endregion
+
+
+        #region Points
+
+        void SignalAddPoint()
+        {
+            signalBus.Fire(new SignalGame.AddPoints()
+            {
+                PointSum = incomePoints
+            });
         }
 
         #endregion

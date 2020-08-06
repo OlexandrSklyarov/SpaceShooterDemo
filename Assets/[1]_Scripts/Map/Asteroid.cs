@@ -1,16 +1,33 @@
 ﻿using UnityEngine;
 using SA.Pool;
 using SA.SpaceShooter.Ship;
+using Zenject;
 
 namespace SA.SpaceShooter
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Asteroid : MonoActionTimer, IPoolable, IEnemy
+    public class Asteroid : MonoActionTimer, Pool.IPoolable, IEnemy, ITarget, IHealth
     {
         #region Properties
 
         public int PoolID { get; set; }
 
+        public Target TargetType { get; private set; }
+
+        public int HP
+        {
+            get => currentHP;
+            private set
+            {
+                currentHP = Mathf.Clamp(value, 0, MAX_HP);
+                if (currentHP <= 0)
+                {
+                    SignalAddPoint();
+                    CreateVFX();
+                    ReturnToPool();
+                }
+            }
+        }
         #endregion
 
 
@@ -18,7 +35,11 @@ namespace SA.SpaceShooter
 
         [SerializeField] GameObject destroyVFX;
 
-        Rigidbody rb;      
+        SignalBus signalBus;
+        Rigidbody rb;
+        int incomePoints;
+        int currentHP;
+        const int MAX_HP = 1;
 
         #endregion
 
@@ -28,11 +49,19 @@ namespace SA.SpaceShooter
         void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            TargetType = Target.OTHER;
         }
 
-        public void Push(Vector3 force, float lifeTime)
+        public void Push(Vector3 force, float lifeTime, int incomePoints, SignalBus signalBus)
         {
+            this.incomePoints = incomePoints;
+            this.signalBus = signalBus;
+            HP = MAX_HP;
+
             ActionTimer(lifeTime, ReturnToPool);
+
+            rb.isKinematic = false;
+            //rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.AddForce(force, ForceMode.VelocityChange);
         }
 
@@ -45,9 +74,17 @@ namespace SA.SpaceShooter
         {
             if (other.gameObject.GetComponent<PlayerShip>() is PlayerShip)
             {
-                CreateVFX();
-                ReturnToPool();
+                Damage();
             }
+        }
+
+
+        void SignalAddPoint()
+        {
+            signalBus.Fire(new SignalGame.AddPoints()
+            { 
+                PointSum = incomePoints
+            });
         }
 
 
@@ -70,11 +107,21 @@ namespace SA.SpaceShooter
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
-        public void OnDespawn() { }
 
-        public void OnSpawn() 
+        public void OnSpawn() { }
+
+
+        public void OnDespawn()
         {
+            //rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
+            rb.isKinematic = true;
             OnDispose();
+        }
+
+
+        public void Damage()
+        {
+            HP--;
         }
 
         #endregion
