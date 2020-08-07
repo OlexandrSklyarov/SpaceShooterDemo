@@ -59,10 +59,12 @@ namespace SA.SpaceShooter.Ship
 
         #region Init
 
-        void Awake()
+        protected virtual void Awake()
         {
             myTR = transform;
             rb = GetComponent<Rigidbody>();
+            shipMoving = new ShipMoving();
+            shipWeapon = new ShipWeapon();
         }
 
 
@@ -75,8 +77,8 @@ namespace SA.SpaceShooter.Ship
 
             InitRB();
 
-            shipMoving = new ShipMoving(rb, shipPrm);
-            shipWeapon = new ShipWeapon(shipPrm, firePoints);
+            shipMoving.Init(rb, shipPrm);
+            shipWeapon.Init(shipPrm, firePoints);
         }
 
 

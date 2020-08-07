@@ -46,6 +46,11 @@ namespace SA.SpaceShooter
 
                 lastPushTime = Time.time + dataGame.SpawnAsteroidsCoooldown;
             }
+
+            for (int i = 0; i < asteroids.Count; i++)
+            {
+                asteroids[i].Tick();
+            }
         }
 
 
@@ -56,7 +61,11 @@ namespace SA.SpaceShooter
             var asteroid = CreateAsteroid(data.Prefab, point);
 
             var speed = UnityEngine.Random.Range(data.MinSpeed, data.MinSpeed);
-            asteroid.Push(Vector3.back * speed, dataGame.AsteroidsLifeTime, dataGame.AddPoints, signalBus);
+
+            asteroid.Push(  Vector3.back * speed, 
+                            dataGame.MapSize.Down, 
+                            dataGame.AddPoints, 
+                            signalBus);
         }
 
 

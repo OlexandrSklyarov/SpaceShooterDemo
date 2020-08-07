@@ -7,7 +7,7 @@ using System;
 namespace SA.SpaceShooter
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Asteroid : MonoActionTimer, Pool.IPoolable, IEnemy, ITarget, IHealth
+    public class Asteroid : MonoBehaviour, Pool.IPoolable, IEnemy, ITarget, IHealth
     {
         #region Properties
 
@@ -43,11 +43,15 @@ namespace SA.SpaceShooter
 
         [SerializeField] GameObject destroyVFX;
 
+        Transform myTR;
         SignalBus signalBus;
         Rigidbody rb;
+
         int incomePoints;
         int currentHP;
         const int MAX_HP = 1;
+
+        float zMapSize;
 
         #endregion
 
@@ -56,17 +60,17 @@ namespace SA.SpaceShooter
 
         void Awake()
         {
+            myTR = transform;
             rb = GetComponent<Rigidbody>();
             TargetType = Target.OTHER;
         }
 
-        public void Push(Vector3 force, float lifeTime, int incomePoints, SignalBus signalBus)
+        public void Push(Vector3 force, float zMapSize, int incomePoints, SignalBus signalBus)
         {
             this.incomePoints = incomePoints;
+            this.zMapSize = zMapSize;
             this.signalBus = signalBus;
             HP = MAX_HP;
-
-            ActionTimer(lifeTime, ReturnToPool);
 
             rb.isKinematic = false;
             rb.AddForce(force, ForceMode.VelocityChange);
@@ -77,6 +81,19 @@ namespace SA.SpaceShooter
         void RandomRotate()
         {
            rb.angularVelocity = UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.1f, 10f);
+        }
+
+        #endregion
+
+
+        #region Update
+
+        public void Tick()
+        {
+            if (myTR.position.z < zMapSize)
+            {
+                ReturnToPool();
+            }
         }
 
         #endregion
@@ -131,7 +148,6 @@ namespace SA.SpaceShooter
         public void OnDespawn()
         {
             rb.isKinematic = true;
-            OnDispose();
         }
 
 
@@ -140,17 +156,7 @@ namespace SA.SpaceShooter
             HP--;
         }
 
-        #endregion
-
-
-        #region Clear
-
-        void OnDestroy()
-        {
-            OnDispose();
-        }
-
-        #endregion
+        #endregion    
 
     }
 }

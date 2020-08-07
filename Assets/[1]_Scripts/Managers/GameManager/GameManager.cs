@@ -4,7 +4,6 @@ using Zenject;
 using UnityEngine.SceneManagement;
 using UniRx;
 using System;
-using SA.Pool;
 
 namespace SA.SpaceShooter
 {
@@ -43,6 +42,10 @@ namespace SA.SpaceShooter
 
         int points;
 
+        int completedPopulateProcess;
+        int maxPopulateProcess;
+        bool isPopulate;
+
         #endregion
 
 
@@ -69,9 +72,6 @@ namespace SA.SpaceShooter
             Subscription();
 
             PopulatePoolObjects();
-
-            //стартуем создание игры с задержкой
-            ActionTimer(0.1f, CreateGame);
         }
 
 
@@ -136,39 +136,55 @@ namespace SA.SpaceShooter
 
         #region Pool
 
+        //заполняет пул обектами до начала игры
         void PopulatePoolObjects()
         {
-            int amount = 2;
-            int amountPerTick = 2;
-            int tickSize = 5;
+            var bm = BuildManager.GetInstance();
+
+            int amount = 1;
+            int amountPerTick = 10;
+            int tickSize = 1;
 
             var enemys = dataGame.DataEnemys;
+            var asteroids = dataGame.DataAsteroids;
+
+            maxPopulateProcess = asteroids.Length + enemys.Length;
 
             for (int i = 0; i < enemys.Length; i++)
-            {               
-                PopulateEntitys(enemys[i].Prefab, amount, amountPerTick, tickSize);
+            {
+               bm.PopulateEntitys(Pool.PoolType.ENTITIES, 
+                                   enemys[i].Prefab, 
+                                   amount, 
+                                   amountPerTick, 
+                                   tickSize, 
+                                   CheckPopulateProcess);
             }
-
-            var asteroids = dataGame.DataAsteroids;
 
             for (int i = 0; i < asteroids.Length; i++)
             {
-                PopulateEntitys(asteroids[i].Prefab, amount, amountPerTick, tickSize);
+                bm.PopulateEntitys(Pool.PoolType.ENTITIES,
+                                    asteroids[i].Prefab,
+                                    amount,
+                                    amountPerTick,
+                                    tickSize,
+                                    CheckPopulateProcess);
             }
-
         }
 
 
-        void PopulateEntitys(GameObject prefab, int amount, int amountPerTick, int tickSize)
+        //проверяет завершены ли все процессы по заполнению пула, и стартует игру
+        void CheckPopulateProcess()
         {
-            PoolManager.GetInstance()
-                    .Addpool(PoolType.ENTITIES)
-                    .PopulateWith(prefab, amount, amountPerTick, tickSize)
-                    .OnCompletedPopulateEvent += () =>
-                    {
-                        Debug.Log("Populate entitys");
-                    };
+            completedPopulateProcess++;
+                       
+            if (completedPopulateProcess >= maxPopulateProcess && !isPopulate)
+            {
+                //стартуем создание игры с задержкой
+                ActionTimer(0.1f, CreateGame);
+                isPopulate = true;
+            }
         }
+
 
         #endregion
 
@@ -235,23 +251,16 @@ namespace SA.SpaceShooter
             .AddTo(this);
         }
 
-
         #endregion
 
 
         #region Exit
 
-        void ClearScene()
+        void OnDestroy()
         {
             unitManager?.Clear();
             asteroidGenerator?.Clear();
-            Pool.PoolManager.GetInstance().Dispose();
-        }
-
-
-        void OnDestroy()
-        {
-            ClearScene();
+            BuildManager.GetInstance().Clear();
         }
 
 

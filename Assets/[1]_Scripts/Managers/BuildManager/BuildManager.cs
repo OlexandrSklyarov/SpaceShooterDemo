@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using SA.Pool;
+using System;
 
 public class BuildManager
 {
@@ -31,7 +32,28 @@ public class BuildManager
 
         return instance;
     }
-   
+
+
+    #endregion
+
+
+    #region Populate Entityes
+
+    public void PopulateEntitys(PoolType type, 
+                                GameObject prefab, 
+                                int amount, 
+                                int amountPerTick, 
+                                int tickSize, 
+                                Action callback = null)
+    {
+        PoolManager.GetInstance()
+            .Addpool(type)
+            .PopulateWith(prefab, amount, amountPerTick, tickSize)
+            .OnCompletedPopulateEvent += () =>
+            {
+                callback?.Invoke();
+            };
+    }
 
     #endregion
 
@@ -82,6 +104,17 @@ public class BuildManager
         {
             UnityEngine.Object.Destroy(go);
         }
+    }
+
+    #endregion
+
+
+
+    #region Clear
+
+    public void Clear()
+    {
+        PoolManager.GetInstance().Dispose();
     }
 
     #endregion

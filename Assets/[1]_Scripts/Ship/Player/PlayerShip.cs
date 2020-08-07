@@ -35,6 +35,12 @@ namespace SA.SpaceShooter.Ship
 
         #region Init
 
+        protected override void Awake()
+        {
+            base.Awake();
+            input = new PlayerInput();
+        }
+
         public void Init(ShipParameters shipPrm, MapSize mapSize, SignalBus signalBus)
         {
             ShipInit(shipPrm, mapSize, signalBus);
@@ -42,8 +48,6 @@ namespace SA.SpaceShooter.Ship
             SignalChangeHP();
 
             TargetType = Target.PLAYER;
-
-            input = new PlayerInput();
         }
 
 

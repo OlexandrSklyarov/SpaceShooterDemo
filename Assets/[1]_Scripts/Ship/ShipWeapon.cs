@@ -15,7 +15,7 @@ namespace SA.SpaceShooter.Ship
 
         #region Init
 
-        public ShipWeapon(ShipParameters prm, Transform[] firePoints)
+        public void Init(ShipParameters prm, Transform[] firePoints)
         {
             this.prm = prm;
             this.firePoints = firePoints;

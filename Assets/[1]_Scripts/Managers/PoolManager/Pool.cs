@@ -25,7 +25,8 @@ namespace SA.Pool
 
     #region Pool Init
 
-        //позволяет создасть некоторое количетво (amount) объектов, с разбиение по количеству на несклько кадров
+        //позволяет создасть некоторое количетво (amount) объектов, 
+        //с разбиение по количеству на несклько кадров
         public Pool PopulateWith(GameObject prefab, int amount, int amountPerTick, int tickSize = 1)
         {
             var key = prefab.GetInstanceID();

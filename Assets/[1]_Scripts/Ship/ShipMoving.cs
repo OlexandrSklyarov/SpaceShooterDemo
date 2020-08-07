@@ -14,7 +14,7 @@ namespace SA.SpaceShooter.Ship
 
         #region Init
 
-        public ShipMoving(Rigidbody rb, ShipParameters prm)
+        public void Init(Rigidbody rb, ShipParameters prm)
         {
             this.rb = rb;
             this.prm = prm;

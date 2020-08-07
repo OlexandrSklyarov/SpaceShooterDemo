@@ -14,6 +14,7 @@ namespace SA.SpaceShooter.Ship
         float targetManeuver;
         int incomePoints;
         bool isMoneuverProcces;
+        Coroutine maneuverCoroutine;
 
         #endregion
 
@@ -33,7 +34,7 @@ namespace SA.SpaceShooter.Ship
             this.incomePoints = incomePoints;
 
             //запускаем случайный манёвр корабля
-            StartCoroutine( StartManeuverProcess() );
+            maneuverCoroutine = StartCoroutine( StartManeuverProcess() );
         }
 
         #endregion
@@ -129,6 +130,7 @@ namespace SA.SpaceShooter.Ship
         protected override void Deactivate()
         {
             isMoneuverProcces = false;
+            StopCoroutine(maneuverCoroutine);
             base.Deactivate();
         }
 
