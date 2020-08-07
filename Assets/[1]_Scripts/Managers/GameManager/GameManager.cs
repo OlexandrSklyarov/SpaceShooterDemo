@@ -141,9 +141,9 @@ namespace SA.SpaceShooter
         {
             var bm = BuildManager.GetInstance();
 
-            int amount = 1;
-            int amountPerTick = 10;
-            int tickSize = 1;
+            int amount = config.Amount;
+            int amountPerTick = config.AmountPerTick;
+            int tickSize = config.TickSize;
 
             var enemys = dataGame.DataEnemys;
             var asteroids = dataGame.DataAsteroids;
