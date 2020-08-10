@@ -25,6 +25,7 @@ namespace SA.SpaceShooter.UI
         [Header("GameOver")]
         [SerializeField] Canvas gameOverCanvas;
         [SerializeField] Button restartButton;
+        [SerializeField] Button mainMenuButton_2;
 
         [Space]
         [Header("pauseMenu")]
@@ -81,6 +82,7 @@ namespace SA.SpaceShooter.UI
                         break;
                     case GameMode.STOP:
                         EnabledGameOverCanvas(true);
+                        EnabledGameInterfaceCanvas(false);
                         break;
                 }
             });
@@ -107,13 +109,21 @@ namespace SA.SpaceShooter.UI
 
         void InitGameOverPanel()
         {
+            //restart
             restartButton.onClick.AddListener(() =>
             {
                 signalBus.Fire(new SignalGame.OnClickRestartButton());
             });
 
+            //main menu
+            mainMenuButton_2.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnClickMainMenuButton());
+            });
+
             EnabledGameOverCanvas(false);
         }
+
 
         void EnabledGameOverCanvas(bool flag)
         {

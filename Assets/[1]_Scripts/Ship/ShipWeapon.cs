@@ -1,10 +1,18 @@
-﻿using SA.Pool;
+﻿using System;
+using SA.Pool;
 using UnityEngine;
 
 namespace SA.SpaceShooter.Ship
 {
     public class ShipWeapon
     {
+        #region Events
+
+        public event Action OnShoot;
+
+        #endregion
+
+
         #region Var
 
         ShipParameters prm;
@@ -40,6 +48,7 @@ namespace SA.SpaceShooter.Ship
                                                     null);
 
                 go.GetComponent<Bullet>().Push(point.forward, target);
+                OnShoot?.Invoke();
             }
 
             lastFireTime = Time.time + prm.FireCooldown;

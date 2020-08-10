@@ -67,27 +67,16 @@ namespace SA.SpaceShooter.Ship
         }
 
         #endregion
-
-
-        #region Attack
-
-        void Fire()
-        {
-            if (input.IsFire)
-            {
-                shipWeapon.Attack(Target.OTHER);
-            }
-        }
-
-        #endregion
-
+       
 
         #region Update
 
         public override void Tick()
         {
             input.Tick();
-            Fire();
+
+            if (input.IsFire)
+                Fire(Target.OTHER);
         }
 
 

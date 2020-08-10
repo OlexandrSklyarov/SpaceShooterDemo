@@ -17,8 +17,7 @@ namespace SA.SpaceShooter
             set
             {
                 _currentGameMode = value;
-
-                signalBus.Fire(new SignalGame.ChangeGameMode() { Mode = _currentGameMode });
+                SignalChangeMode();
             }
         }
 
@@ -88,14 +87,14 @@ namespace SA.SpaceShooter
             signalBus.Subscribe((SignalGame.OnClickPauseButton s) =>
             {
                 SetGameMode(GameMode.PAUSE);
+                SignalPlayMenuMusic();
                 Time.timeScale = 0f;
             });
 
             //continue game
             signalBus.Subscribe((SignalGame.OnClickContinueGameButton s) =>
             {
-                SetGameMode(GameMode.GAME);
-                Time.timeScale = 1f;
+                PlayGame();
             });
 
             //meinMenu
@@ -127,7 +126,14 @@ namespace SA.SpaceShooter
 
             asteroidGenerator = new AsteroidGenerator(dataGame, asteroidSpawnPoints, signalBus);
 
-            CurrentGameMode = GameMode.GAME;
+            PlayGame();
+        }
+
+
+        void PlayGame()
+        {
+            SetGameMode(GameMode.GAME);
+            SignalPlayGameMusic();
             Time.timeScale = 1f;
         }
 
@@ -249,6 +255,28 @@ namespace SA.SpaceShooter
                 act?.Invoke();
             })
             .AddTo(this);
+        }
+
+        #endregion
+
+
+        #region Signal
+
+        void SignalChangeMode()
+        {
+            signalBus.Fire(new SignalGame.ChangeGameMode() { Mode = CurrentGameMode });
+        }
+
+
+        void SignalPlayGameMusic()
+        {
+            signalBus.Fire(new SignalGame.PlayMusic_Game());
+        }
+
+
+        void SignalPlayMenuMusic()
+        {
+            signalBus.Fire(new SignalGame.PlayMusicGameMenu());
         }
 
         #endregion

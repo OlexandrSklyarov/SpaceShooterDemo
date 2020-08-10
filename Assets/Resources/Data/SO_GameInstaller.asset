@@ -15,3 +15,4 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 878c12ddb0b508960a96751c972b9b73, type: 2}
   config: {fileID: 11400000, guid: 466dcd5c47ac45a449da9dfd6f54c168, type: 2}
   dataBackgraund: {fileID: 11400000, guid: 2e03fb2c64945e782b20c5c750d1802f, type: 2}
+  dataAudio: {fileID: 11400000, guid: 841a6f7ee08d94a8bbe656410586d2ed, type: 2}

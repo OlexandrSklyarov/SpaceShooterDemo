@@ -44,7 +44,7 @@ namespace SA.SpaceShooter.Ship
 
         public override void Tick()
         {
-            shipWeapon.Attack(Target.PLAYER);
+            Fire(Target.PLAYER);
         }
 
 

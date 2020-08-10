@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f60b41aff240f4712a00fbddb40a6d4a, type: 3}
+  m_Name: DataAudio
+  m_EditorClassIdentifier: 
+  bigAsteroidDestroy: {fileID: 8300000, guid: 0ed403ae0e0d84c2fb40f9b55116af79, type: 3}
+  smallAsteroidDestroy: {fileID: 8300000, guid: 3c1de4fe05be44abe9dfc42da59d5269,
+    type: 3}
+  shipDestroy: {fileID: 8300000, guid: bb83d4316e4a643c59edeba50f33cb8b, type: 3}
+  bulletShoot: {fileID: 8300000, guid: 025aa80ce83394dbb984ac462d965da6, type: 3}
+  sfx_AudioSourceAmount: 15
+  gameMusic: {fileID: 8300000, guid: 8a534670fc2bb1241b3f74bc62970baf, type: 3}
+  mainMenuMusic: {fileID: 8300000, guid: 6515811dc7373aa46bb5afaa6f08c101, type: 3}
+  gameMenuMusic: {fileID: 8300000, guid: 759264f957afe8849916a8598944cd7e, type: 3}

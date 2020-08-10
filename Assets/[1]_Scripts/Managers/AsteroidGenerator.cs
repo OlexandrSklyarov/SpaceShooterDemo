@@ -3,6 +3,7 @@ using SA.Pool;
 using SA.SpaceShooter.Data;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace SA.SpaceShooter
 {
@@ -60,18 +61,17 @@ namespace SA.SpaceShooter
             var point = GetRandomPoint();
             var asteroid = CreateAsteroid(data.Prefab, point);
 
-            var speed = UnityEngine.Random.Range(data.MinSpeed, data.MinSpeed);
+            var speed = Random.Range(data.MinSpeed, data.MinSpeed);
 
-            asteroid.Push(  Vector3.back * speed, 
-                            dataGame.MapSize.Down, 
-                            dataGame.AddPoints, 
-                            signalBus);
+            asteroid.Init(  dataGame.MapSize.Down, dataGame.AddPoints, signalBus);
+
+            asteroid.Push(Vector3.back * speed);
         }
 
 
         DataAsteroid GetRandomData()
         {
-            var index = UnityEngine.Random.Range(0, dataGame.DataAsteroids.Length);
+            var index = Random.Range(0, dataGame.DataAsteroids.Length);
             return dataGame.DataAsteroids[index];
         }
 
@@ -87,7 +87,7 @@ namespace SA.SpaceShooter
 
             //подписываемся на событие удаления и добавляем в список
             var asteroid = go.GetComponent<Asteroid>();
-            asteroid.OnDestroyAsteroids += (ast) => asteroids.Remove(ast);
+            asteroid.OnDestroyAsteroid += (ast) => asteroids.Remove(ast);
             asteroids.Add(asteroid);
 
             return asteroid;
@@ -96,7 +96,7 @@ namespace SA.SpaceShooter
 
         Transform GetRandomPoint()
         {
-            var index = UnityEngine.Random.Range(0, asteroidSpawnPoints.childCount);
+            var index = Random.Range(0, asteroidSpawnPoints.childCount);
             return asteroidSpawnPoints.GetChild(index);
         }
 

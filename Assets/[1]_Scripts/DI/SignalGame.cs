@@ -52,5 +52,24 @@ namespace SA.SpaceShooter
 
         #endregion
 
+
+        #region Audio
+
+        public class PlaySFX_BigAsteroidDestroy { }
+
+        public class PlaySFX_SmallAsteroidDestroy { }
+
+        public class PlaySFX_ShipDestroy { }
+
+        public class PlaySFX_BulletShoot { }
+
+        public class PlayMusic_Game { }
+
+        public class PlayMusicMainMenu { }
+
+        public class PlayMusicGameMenu { }
+
+        #endregion
+
     }
 }

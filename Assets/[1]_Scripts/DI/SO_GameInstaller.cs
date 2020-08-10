@@ -12,6 +12,7 @@ namespace SA.SpaceShooter
         [SerializeField] DataGame data;
         [SerializeField] DataConfig config;
         [SerializeField] DataBackgraund dataBackgraund;
+        [SerializeField] DataAudio dataAudio;
 
         #endregion
 
@@ -23,6 +24,7 @@ namespace SA.SpaceShooter
             Container.BindInstance(data);
             Container.BindInstance(config);
             Container.BindInstance(dataBackgraund);
+            Container.BindInstance(dataAudio);
         }
 
         #endregion

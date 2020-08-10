@@ -3,6 +3,7 @@ using SA.Pool;
 using SA.SpaceShooter.Ship;
 using Zenject;
 using System;
+using Random = UnityEngine.Random;
 
 namespace SA.SpaceShooter
 {
@@ -25,6 +26,7 @@ namespace SA.SpaceShooter
                 {
                     SignalAddPoint();
                     CreateVFX();
+                    SignalSFX();
                     ReturnToPool();
                 }
             }
@@ -34,7 +36,7 @@ namespace SA.SpaceShooter
 
         #region Events
 
-        public event Action<Asteroid> OnDestroyAsteroids;
+        public event Action<Asteroid> OnDestroyAsteroid;
 
         #endregion 
 
@@ -65,13 +67,18 @@ namespace SA.SpaceShooter
             TargetType = Target.OTHER;
         }
 
-        public void Push(Vector3 force, float zMapSize, int incomePoints, SignalBus signalBus)
+
+        public void Init(float zMapSize, int incomePoints, SignalBus signalBus)
         {
             this.incomePoints = incomePoints;
             this.zMapSize = zMapSize;
             this.signalBus = signalBus;
             HP = MAX_HP;
+        }
 
+
+        public void Push(Vector3 force)
+        {
             rb.isKinematic = false;
             rb.AddForce(force, ForceMode.VelocityChange);
             RandomRotate();
@@ -80,7 +87,7 @@ namespace SA.SpaceShooter
 
         void RandomRotate()
         {
-           rb.angularVelocity = UnityEngine.Random.insideUnitSphere * UnityEngine.Random.Range(0.1f, 10f);
+           rb.angularVelocity = Random.insideUnitSphere * Random.Range(0.1f, 10f);
         }
 
         #endregion
@@ -119,6 +126,12 @@ namespace SA.SpaceShooter
         }
 
 
+        void SignalSFX()
+        {
+            signalBus.Fire(new SignalGame.PlaySFX_BigAsteroidDestroy());
+        }
+
+
         void CreateVFX()
         {
             BuildManager.GetInstance().Spawn(   PoolType.VFX,
@@ -137,7 +150,7 @@ namespace SA.SpaceShooter
         {
             if (gameObject == null) return;
 
-            OnDestroyAsteroids?.Invoke(this);
+            OnDestroyAsteroid?.Invoke(this);
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 

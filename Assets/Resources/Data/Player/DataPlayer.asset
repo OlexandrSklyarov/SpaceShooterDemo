@@ -24,4 +24,4 @@ MonoBehaviour:
       type: 3}
     bulletPrefab: {fileID: 7470770332365401464, guid: 02277c5d1fab36b79a22e4ccd6ff1bec,
       type: 3}
-    fireCooldown: 0.56
+    fireCooldown: 0.33

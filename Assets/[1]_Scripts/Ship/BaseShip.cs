@@ -18,7 +18,7 @@ namespace SA.SpaceShooter.Ship
             {
                 currentHP = Mathf.Clamp(value, 0, shipPrm.MaxHP);
                 if (currentHP <= 0)
-                {
+                {                   
                     DestroyShip(); 
                 }
             }
@@ -76,9 +76,15 @@ namespace SA.SpaceShooter.Ship
             this.mapSize = mapSize;
 
             InitRB();
-
+            InitWeapon();
             shipMoving.Init(rb, shipPrm);
+        }
+
+
+        void InitWeapon()
+        {
             shipWeapon.Init(shipPrm, firePoints);
+            shipWeapon.OnShoot += () => SignalShootSFX();
         }
 
 
@@ -97,7 +103,17 @@ namespace SA.SpaceShooter.Ship
         public abstract void Tick();
         public abstract void FixedTick();
 
-        #endregion      
+        #endregion
+
+
+        #region Weapon
+
+        protected void Fire(Target targetType)
+        {
+            shipWeapon.Attack(targetType);
+        }
+
+        #endregion
 
 
         #region Damage
@@ -110,6 +126,7 @@ namespace SA.SpaceShooter.Ship
         protected virtual void DestroyShip()
         {
             CreateDestroyVFX();
+            SignalDestroySFX();
             Deactivate();
         }
 
@@ -128,6 +145,22 @@ namespace SA.SpaceShooter.Ship
                                                 myTR.position, 
                                                 Quaternion.identity, 
                                                 null);
+        }
+
+        #endregion
+
+
+        #region Signal
+
+        void SignalDestroySFX()
+        {
+            signalBus.Fire(new SignalGame.PlaySFX_ShipDestroy());
+        }
+
+
+        void SignalShootSFX()
+        {
+            signalBus.Fire(new SignalGame.PlaySFX_BulletShoot());
         }
 
         #endregion
