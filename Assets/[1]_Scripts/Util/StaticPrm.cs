@@ -14,6 +14,7 @@ namespace SA.SpaceShooter
         public static class Scene
         {
             public const string MAIN_MENU = "MainMenu";
+            public const string GAME_LEVEL = "GameLevel";
         }
     }
 }

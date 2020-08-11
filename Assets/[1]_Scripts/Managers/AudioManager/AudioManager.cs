@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections;
-using SA.SpaceShooter.Data;
+﻿using SA.SpaceShooter.Data;
 using UnityEngine;
 using Zenject;
 using System.Linq;
 
 namespace SA.SpaceShooter.Audio
 {
-    public class AudioManager
+    public abstract class AudioManager
     {
 
         #region Var       
 
-        readonly SignalBus signalBus;
-        readonly DataAudio dataAudio;
+        protected readonly SignalBus signalBus;
+        protected readonly DataAudio dataAudio;
 
         private AudioSource musicSourceOne;
         private AudioSource musicSourceTwo;
@@ -27,59 +25,14 @@ namespace SA.SpaceShooter.Audio
     #region Init
 
         [Inject]
-        public AudioManager(SignalBus signalBus, DataAudio dataAudio) 
+        protected AudioManager(SignalBus signalBus, DataAudio dataAudio) 
         {
             this.signalBus = signalBus;
             this.dataAudio = dataAudio;
 
             CreateAudiosorce();
-            SubscriptionMusic();
-            SubscriptionSFX();
 
             Debug.Log("AudioManager Init...");
-        }
-
-
-        void SubscriptionSFX()
-        {
-            signalBus.Subscribe<SignalGame.PlaySFX_BigAsteroidDestroy>(() =>
-            {
-                PlaySFX(dataAudio.BigAsteroidDestroy);
-            });
-
-            signalBus.Subscribe<SignalGame.PlaySFX_SmallAsteroidDestroy>(() =>
-            {
-                PlaySFX(dataAudio.SmallAsteroidDestroy);
-            });
-
-            signalBus.Subscribe<SignalGame.PlaySFX_ShipDestroy>(() =>
-            {
-               PlaySFX(dataAudio.ShipDestroy);
-            });
-
-            signalBus.Subscribe<SignalGame.PlaySFX_BulletShoot>(() =>
-            {
-                PlaySFX(dataAudio.BulletShoot);
-            });
-        }
-
-
-        void SubscriptionMusic()
-        {
-            signalBus.Subscribe<SignalGame.PlayMusic_Game>(() =>
-            {
-                PlayMusic(dataAudio.GameMusic);
-            });
-
-            signalBus.Subscribe<SignalGame.PlayMusicMainMenu>(() =>
-            {
-                PlayMusic(dataAudio.MainMenuMusic);
-            });
-
-            signalBus.Subscribe<SignalGame.PlayMusicGameMenu>(() =>
-            {
-                PlayMusic(dataAudio.GameMenuMusic);
-            });
         }
 
 
@@ -109,13 +62,13 @@ namespace SA.SpaceShooter.Audio
         }
 
 
-    #endregion
+        #endregion
 
 
-    #region Play music
+        #region Play music
 
 
-        void PlayMusic(AudioClip musicClip)
+        protected void PlayMusic(AudioClip musicClip)
         {
             AudioSource activeSource = GetCurrentMusicAudioSource();
 
@@ -125,15 +78,10 @@ namespace SA.SpaceShooter.Audio
         }
 
 
-        void PlayMusic(string nameAudioClip)
-        {
-            Debug.Log($"Playing music:{nameAudioClip}");
-        }
-
-    #endregion
+        #endregion
 
 
-    #region Play music with fade
+        #region Play music with fade
 
         // public void PlayMusicWithFade(AudioClip newClip, float trasitionTime = 1f)
         // {
@@ -197,19 +145,19 @@ namespace SA.SpaceShooter.Audio
         //     originSource.Stop();            
         // }
 
-    #endregion
+        #endregion
 
 
-    #region Play SFX
+        #region Play SFX
 
-        void PlaySFX(AudioClip clip)
+        protected void PlaySFX(AudioClip clip)
         {
             var sources = GetFreeAudioSource();
             sources.PlayOneShot(clip);
         }
 
 
-        void PlaySFX(AudioClip clip, float volume)
+        protected void PlaySFX(AudioClip clip, float volume)
         {
             var sources = GetFreeAudioSource();
             sources.PlayOneShot(clip, volume);
@@ -234,14 +182,14 @@ namespace SA.SpaceShooter.Audio
 
         #region Volume music / SFX
 
-        void SetMusicVolume(float volume)
+        protected void SetMusicVolume(float volume)
         {
             musicSourceOne.volume = volume;
             musicSourceTwo.volume = volume;
         }
 
 
-        void SetSFXVolume(float volume)
+        protected void SetSFXVolume(float volume)
         {
             for (int i = 0; i < sfxSources.Length; i++)
             {

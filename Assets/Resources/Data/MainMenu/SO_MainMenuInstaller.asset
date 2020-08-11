@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 388cf7a639f7fe85685ae66e0ba9dca2, type: 3}
+  m_Name: SO_MainMenuInstaller
+  m_EditorClassIdentifier: 
+  dataLevel: {fileID: 11400000, guid: 42a87931a08536a5eae07e0bdf022b75, type: 2}
+  dataLeveUI: {fileID: 11400000, guid: cdfaa8cb03cc37e3f966a71b2f34ca74, type: 2}
+  dataAudio: {fileID: 11400000, guid: 841a6f7ee08d94a8bbe656410586d2ed, type: 2}
