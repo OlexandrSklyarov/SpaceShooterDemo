@@ -15,3 +15,4 @@ MonoBehaviour:
   amount: 1
   amountPerTick: 1
   tickSize: 1
+  winDeleyTime: 11.5

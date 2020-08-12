@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using TMPro;
+using System;
 
 namespace SA.SpaceShooter.UI
 {
@@ -84,10 +85,8 @@ namespace SA.SpaceShooter.UI
                 var status = levels[i].status;
                 var index = i;
 
-                InitLevelButton(ref newButton, status, index);
-
-                //подписываемся на нажатие по кнопке уровня
-                newButton.SelectButton.onClick.AddListener(() =>
+                //инициализируем кнопку и передаём обратный вызов при нажатии кнопке уровня
+                InitLevelButton(ref newButton, status, index + 1, () => 
                 { 
                     //если уровень имеет статус открыт, или пройден
                     if (status == Level.LevelStatus.OPEN ||
@@ -104,7 +103,7 @@ namespace SA.SpaceShooter.UI
 
 
         //инициализирует кнопку уровня
-        void InitLevelButton(ref LevelButton newButton, Level.LevelStatus status, int index)
+        void InitLevelButton(ref LevelButton newButton, Level.LevelStatus status, int index, Action callback)
         {
             Sprite bkg = dataLevelUI.CloseLevelBGR;
             Sprite icon = dataLevelUI.CloseLevelIcon;
@@ -122,7 +121,7 @@ namespace SA.SpaceShooter.UI
             }
 
             //инициализируем кнопку
-            newButton.Init(bkg, icon, index);
+            newButton.Init(bkg, icon, index, callback);
         }
 
 

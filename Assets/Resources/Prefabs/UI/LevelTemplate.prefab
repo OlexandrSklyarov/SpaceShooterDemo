@@ -363,7 +363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c177faa3c1e0cc50acc4f3366621f38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  btn: {fileID: -3736162740249264593}
+  clickButton: {fileID: -3736162740249264593}
   backgraundImage: {fileID: 1978568216566514027}
   statusImage: {fileID: 1978568215969226879}
   nameText: {fileID: 1978568215146840476}

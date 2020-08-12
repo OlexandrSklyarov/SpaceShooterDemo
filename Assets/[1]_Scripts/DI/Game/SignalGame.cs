@@ -70,11 +70,15 @@ namespace SA.SpaceShooter
 
         public class PlaySFX_BulletShoot { }
 
+        public class PlaySFX_GameOver { }
+
         public class PlayMusic_Game { }
 
         public class PlayMusicGameMenu { }
 
         public class PlayMusic_Win { }
+
+
 
         #endregion
 

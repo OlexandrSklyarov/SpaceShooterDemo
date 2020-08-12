@@ -17,6 +17,8 @@ namespace SA.SpaceShooter.Data
         public AudioClip GameMusic => gameMusic;
         public AudioClip MainMenuMusic => mainMenuMusic;
         public AudioClip GameMenuMusic => gameMenuMusic;
+        public AudioClip WinMusic => winMusic;
+        public AudioClip GameOver => gameOver;
 
         #endregion
 
@@ -28,6 +30,9 @@ namespace SA.SpaceShooter.Data
         [SerializeField] AudioClip smallAsteroidDestroy;
         [SerializeField] AudioClip shipDestroy;
         [SerializeField] AudioClip bulletShoot;
+        [SerializeField] AudioClip gameOver;
+
+        [Space]
         [SerializeField] [Range(1, 50)] int sfx_AudioSourceAmount;
 
         [Space]
@@ -35,6 +40,7 @@ namespace SA.SpaceShooter.Data
         [SerializeField] AudioClip gameMusic;
         [SerializeField] AudioClip mainMenuMusic;
         [SerializeField] AudioClip gameMenuMusic;
+        [SerializeField] AudioClip winMusic;
 
         #endregion
     }

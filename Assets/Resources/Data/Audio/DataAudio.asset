@@ -17,7 +17,9 @@ MonoBehaviour:
     type: 3}
   shipDestroy: {fileID: 8300000, guid: bb83d4316e4a643c59edeba50f33cb8b, type: 3}
   bulletShoot: {fileID: 8300000, guid: 025aa80ce83394dbb984ac462d965da6, type: 3}
+  gameOver: {fileID: 8300000, guid: 59ceeff8ab94d1f47b55c102760a6cc4, type: 3}
   sfx_AudioSourceAmount: 15
   gameMusic: {fileID: 8300000, guid: 8a534670fc2bb1241b3f74bc62970baf, type: 3}
   mainMenuMusic: {fileID: 8300000, guid: 6515811dc7373aa46bb5afaa6f08c101, type: 3}
   gameMenuMusic: {fileID: 8300000, guid: 759264f957afe8849916a8598944cd7e, type: 3}
+  winMusic: {fileID: 8300000, guid: e94f1bd80b7692249863e6d088bd606a, type: 3}

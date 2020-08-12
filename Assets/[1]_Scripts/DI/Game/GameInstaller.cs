@@ -58,7 +58,7 @@ namespace SA.SpaceShooter
             Container.DeclareSignal<SignalGame.PlayMusic_Game>();
             Container.DeclareSignal<SignalGame.PlayMusicGameMenu>();
             Container.DeclareSignal<SignalGame.PlayMusic_Win>();
-
+            Container.DeclareSignal<SignalGame.PlaySFX_GameOver>();
         }
 
         #endregion

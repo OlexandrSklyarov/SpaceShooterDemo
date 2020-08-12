@@ -116,7 +116,7 @@ namespace SA.SpaceShooter
             //palyer destroyed
             signalBus.Subscribe((SignalGame.PlayerDestroy s) =>
             {
-                SetGameMode(GameMode.GAME_OVER);
+                GameOver();
             });
 
             //destroy asteroid
@@ -284,6 +284,13 @@ namespace SA.SpaceShooter
         }
 
 
+        void GameOver()
+        {
+            SetGameMode(GameMode.GAME_OVER);
+            signalBus.Fire(new SignalGame.PlaySFX_GameOver());
+        }
+
+
         void Win()
         {
             if (CurrentGameMode == GameMode.GAME_WIN) return;
@@ -294,7 +301,7 @@ namespace SA.SpaceShooter
             SetStatusLevel();
 
             //выходим в главное меню по таймеру
-            ActionTimer(3f, LoadMeinMenu);
+            ActionTimer(config.WinDeleyTime, LoadMeinMenu);
         }
 
 

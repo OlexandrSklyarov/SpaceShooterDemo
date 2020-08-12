@@ -1,21 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 namespace SA.SpaceShooter.UI
 {
     public class LevelButton : MonoBehaviour
-    {
-        #region Properties
-
-        public Button SelectButton => btn; 
-
-        #endregion
-
-
+    {       
         #region Var
 
-        [SerializeField] Button btn;
+        [SerializeField] Button clickButton;
         [SerializeField] Image backgraundImage;
         [SerializeField] Image statusImage;
         [SerializeField] TextMeshProUGUI nameText;       
@@ -25,12 +19,17 @@ namespace SA.SpaceShooter.UI
 
         #region Init
 
-        public void Init(Sprite backgraund, Sprite statusIcon, int index)
+        public void Init(Sprite backgraund, Sprite statusIcon, int index, Action callback)
         {
             backgraundImage.sprite = backgraund;
             statusImage.sprite = statusIcon;
             nameText.text = index.ToString();
-        }
+
+            clickButton.onClick.AddListener(() =>
+            {
+                callback?.Invoke();
+            });
+        }    
 
         #endregion
     }

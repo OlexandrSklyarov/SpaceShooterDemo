@@ -49,6 +49,7 @@ namespace SA.SpaceShooter
             signalBus.Subscribe((SignalMainMenu.OnClickLevelButton s) =>
             {
                 settings.CurrentLevelIndex = s.LevelIndex;
+                Debug.Log("Select level");
                 LoadScene(StaticPrm.Scene.GAME_LEVEL);
             });
 
@@ -62,6 +63,7 @@ namespace SA.SpaceShooter
 
         void LoadScene(string sceneName)
         {
+            Debug.Log("Load game scene");
             SceneManager.LoadScene(sceneName);
         }
 

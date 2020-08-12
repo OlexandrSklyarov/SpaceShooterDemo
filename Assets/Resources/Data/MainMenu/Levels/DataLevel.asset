@@ -14,8 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levels:
   - maxDestroyAsteroids: 10
-    status: 1
+    status: 2
   - maxDestroyAsteroids: 25
-    status: 0
+    status: 2
   - maxDestroyAsteroids: 50
+    status: 1
+  - maxDestroyAsteroids: 60
+    status: 0
+  - maxDestroyAsteroids: 65
+    status: 0
+  - maxDestroyAsteroids: 75
+    status: 0
+  - maxDestroyAsteroids: 85
+    status: 0
+  - maxDestroyAsteroids: 90
+    status: 0
+  - maxDestroyAsteroids: 100
+    status: 0
+  - maxDestroyAsteroids: 120
     status: 0

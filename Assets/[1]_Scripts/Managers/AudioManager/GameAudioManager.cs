@@ -36,6 +36,11 @@ namespace SA.SpaceShooter.Audio
             {
                 PlaySFX(dataAudio.BulletShoot);
             });
+
+            signalBus.Subscribe<SignalGame.PlaySFX_GameOver>(() =>
+            {
+                PlaySFX(dataAudio.GameOver);
+            });
         }
 
 
@@ -49,6 +54,11 @@ namespace SA.SpaceShooter.Audio
             signalBus.Subscribe<SignalGame.PlayMusicGameMenu>(() =>
             {
                 PlayMusic(dataAudio.GameMenuMusic);
+            });
+
+            signalBus.Subscribe<SignalGame.PlayMusic_Win>(() =>
+            {
+                PlayMusic(dataAudio.WinMusic);
             });
         }
 
