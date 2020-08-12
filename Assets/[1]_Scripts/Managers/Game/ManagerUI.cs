@@ -24,14 +24,21 @@ namespace SA.SpaceShooter.UI
         [Space]
         [Header("GameOver")]
         [SerializeField] Canvas gameOverCanvas;
-        [SerializeField] Button restartButton;
-        [SerializeField] Button mainMenuButton_2;
+
+        [Space]
+        [Header("WIN")]
+        [SerializeField] Canvas winCanvas;
 
         [Space]
         [Header("pauseMenu")]
         [SerializeField] Canvas pauseMenuCanvas;
-        [SerializeField] Button mainMenuButton;
         [SerializeField] Button continueGameButton;
+
+        [Space]
+        [Header("ButtonCanvas")]
+        [SerializeField] Canvas buttonCanvas;
+        [SerializeField] Button mainMenuButton;
+        [SerializeField] Button restartButton;
 
         DataConfig config;
         SignalBus signalBus;
@@ -59,7 +66,9 @@ namespace SA.SpaceShooter.UI
             InitMobileInput();
             InitTopPanel();
             InitGameOverPanel();
+            InitWinPanel();
             InitPauseMenu();
+            InitButtonsPanel();
 
             Subscription();
         }
@@ -75,14 +84,22 @@ namespace SA.SpaceShooter.UI
                     case GameMode.GAME:
                         EnabledGameOverCanvas(false);
                         EnabledPauseMenuCanvas(false);
+                        EnabledButtonsCanvas(false);
                         EnabledGameInterfaceCanvas(true);
                         break;
                     case GameMode.PAUSE:
-                        EnabledPauseMenuCanvas(true);
-                        break;
-                    case GameMode.STOP:
-                        EnabledGameOverCanvas(true);
                         EnabledGameInterfaceCanvas(false);
+                        EnabledPauseMenuCanvas(true);
+                        EnabledButtonsCanvas(true);
+                        break;
+                    case GameMode.GAME_OVER:
+                        EnabledGameInterfaceCanvas(false);
+                        EnabledGameOverCanvas(true);
+                        EnabledButtonsCanvas(true);
+                        break;
+                    case GameMode.GAME_WIN:
+                        EnabledGameInterfaceCanvas(false);
+                        EnabledWinCanvas(true);
                         break;
                 }
             });
@@ -109,18 +126,6 @@ namespace SA.SpaceShooter.UI
 
         void InitGameOverPanel()
         {
-            //restart
-            restartButton.onClick.AddListener(() =>
-            {
-                signalBus.Fire(new SignalGame.OnClickRestartButton());
-            });
-
-            //main menu
-            mainMenuButton_2.onClick.AddListener(() =>
-            {
-                signalBus.Fire(new SignalGame.OnClickMainMenuButton());
-            });
-
             EnabledGameOverCanvas(false);
         }
 
@@ -132,6 +137,21 @@ namespace SA.SpaceShooter.UI
 
         #endregion
 
+
+        #region Win panel
+
+        void InitWinPanel()
+        {
+            EnabledWinCanvas(false);
+        }
+
+
+        void EnabledWinCanvas(bool flag)
+        {
+            winCanvas.enabled = flag;
+        }
+
+        #endregion
 
 
         #region Top panel
@@ -184,19 +204,13 @@ namespace SA.SpaceShooter.UI
         #endregion
 
 
-        #region Top panel
+        #region Pause menu
 
         void InitPauseMenu()
         {
             continueGameButton.onClick.AddListener(() =>
             {
                 signalBus.Fire(new SignalGame.OnClickContinueGameButton());
-            });
-
-
-            mainMenuButton.onClick.AddListener(() =>
-            {
-                signalBus.Fire(new SignalGame.OnClickMainMenuButton());
             });
 
             EnabledPauseMenuCanvas(false);
@@ -206,6 +220,34 @@ namespace SA.SpaceShooter.UI
         void EnabledPauseMenuCanvas(bool flag)
         {
             pauseMenuCanvas.enabled = flag;
+        }
+
+        #endregion
+
+
+        #region Buttons canvas
+
+        void InitButtonsPanel()
+        {
+            //restart
+            restartButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnClickRestartButton());
+            });
+
+            //main menu
+            mainMenuButton.onClick.AddListener(() =>
+            {
+                signalBus.Fire(new SignalGame.OnClickMainMenuButton());
+            });
+
+            EnabledPauseMenuCanvas(false);
+        }
+
+
+        void EnabledButtonsCanvas(bool flag)
+        {
+            buttonCanvas.enabled = flag;
         }
 
         #endregion

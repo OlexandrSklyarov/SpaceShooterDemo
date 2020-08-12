@@ -72,16 +72,21 @@ namespace SA.SpaceShooter
 
         void LoadGame()
         {
-            if (SaveLoadManager.GetInstance().LoadGame(out PlayerSave save))
+            if (!settings.IsGameStarted)
             {
-                settings.Levels = save.Levels;
-                settings.PointRecord = save.PointRecord;
+                if (SaveLoadManager.GetInstance().LoadGame(out PlayerSave save))
+                {
+                    settings.Levels = save.Levels;
+                    settings.PointRecord = save.PointRecord;
+                }
+                else
+                {
+                    settings.Levels = dataLevel.Levels;
+                    settings.PointRecord = 0;
+                }
             }
-            else
-            {
-                settings.Levels = dataLevel.Levels;
-                settings.PointRecord = 0;
-            }
+
+            settings.IsGameStarted = true;
         }
 
 
@@ -104,7 +109,7 @@ namespace SA.SpaceShooter
             signalBus.Fire(new SignalMainMenu.LoadGame()
             {
                 GameLevels = settings.Levels,
-                PointRecord = settings.CurrentLevelIndex
+                PointRecord = settings.PointRecord
             });
         }
 

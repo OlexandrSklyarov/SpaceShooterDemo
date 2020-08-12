@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SA.Pool;
 using SA.SpaceShooter.Data;
 using UnityEngine;
@@ -85,12 +86,26 @@ namespace SA.SpaceShooter
                                                         Quaternion.identity, 
                                                         null);
 
-            //подписываемся на событие удаления и добавляем в список
             var asteroid = go.GetComponent<Asteroid>();
-            asteroid.OnDestroyAsteroid += (ast) => asteroids.Remove(ast);
+
+            //подписываемся на событие удаления и добавляем в список
+            asteroid.OnDestroyAsteroid += (ast) =>
+            {
+                SignalDestroyAsteroid();
+                asteroids.Remove(ast);
+            };
+
+            //добавляем в список
             asteroids.Add(asteroid);
 
             return asteroid;
+        }
+
+
+        //сигнал об уничтожении астероида
+        void SignalDestroyAsteroid()
+        {
+            signalBus.Fire(new SignalGame.DestroyAsteroid());
         }
 
 

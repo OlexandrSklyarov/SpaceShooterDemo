@@ -41,6 +41,9 @@ namespace SA.SpaceShooter
             //GameManager
             Container.DeclareSignal<SignalGame.ChangeGameMode>();
 
+            //Asteroids
+            Container.DeclareSignal<SignalGame.DestroyAsteroid>();
+
             //player 
             Container.DeclareSignal<SignalGame.AddPoints>();
             Container.DeclareSignal<SignalGame.UpdatePointSum>();
@@ -54,6 +57,7 @@ namespace SA.SpaceShooter
             Container.DeclareSignal<SignalGame.PlaySFX_BulletShoot>();
             Container.DeclareSignal<SignalGame.PlayMusic_Game>();
             Container.DeclareSignal<SignalGame.PlayMusicGameMenu>();
+            Container.DeclareSignal<SignalGame.PlayMusic_Win>();
 
         }
 

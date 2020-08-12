@@ -3,6 +3,6 @@ namespace SA.SpaceShooter
 {
     public enum GameMode
     {
-        PAUSE, GAME, STOP
+        PAUSE, GAME, GAME_OVER, GAME_WIN
     }
 }

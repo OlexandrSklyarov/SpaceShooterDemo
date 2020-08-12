@@ -7,6 +7,8 @@ namespace SA.SpaceShooter
 
         #region Properties
 
+        public bool IsGameStarted { get; set; }
+
         public int Score { get; set; }
         public int PointRecord { get; set; }
         public int CurrentLevelIndex { get; set; }

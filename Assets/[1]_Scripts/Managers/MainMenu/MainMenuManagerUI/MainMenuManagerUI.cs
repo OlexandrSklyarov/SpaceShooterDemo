@@ -82,7 +82,7 @@ namespace SA.SpaceShooter.UI
             {
                 var newButton = CreateLevel(dataLevelUI.LevelTemplatePrefab);
                 var status = levels[i].status;
-                var index = i + 1;
+                var index = i;
 
                 InitLevelButton(ref newButton, status, index);
 

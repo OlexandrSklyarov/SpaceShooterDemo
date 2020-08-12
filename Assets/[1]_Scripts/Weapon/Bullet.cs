@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using SA.Pool;
 using UniRx;
+using System.Collections.Generic;
+using System;
+using System.Collections;
 
 namespace SA.SpaceShooter
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Bullet : MonoActionTimer, IPoolable
+    public class Bullet : MonoBehaviour, IPoolable
     {
         #region Properties
 
@@ -43,9 +46,16 @@ namespace SA.SpaceShooter
             rb.isKinematic = false;
             rb.AddForce(dir * SPEED, ForceMode.Impulse);
 
-            ActionTimer(DESTROY_TIMER, ReturnToPool);
+            Timer(DESTROY_TIMER, ReturnToPool);
 
             isPushed = true;
+        }
+
+
+        IEnumerator Timer(float time, Action act)
+        {
+            yield return new WaitForSeconds(time);
+            act?.Invoke();
         }
 
         #endregion
@@ -73,7 +83,7 @@ namespace SA.SpaceShooter
 
         void CreateVFX()
         {
-            BuildManager.GetInstance().Spawn(   PoolType.VFX,
+            BuildManager.GetInstance().Spawn(PoolType.VFX,
                                                 destroyVFX,
                                                 transform.position,
                                                 Quaternion.identity,
@@ -96,22 +106,13 @@ namespace SA.SpaceShooter
         }
 
         public void OnDespawn()
-        {           
+        {
             rb.isKinematic = true;
             isPushed = false;
-            OnDispose();
         }
 
         #endregion
 
 
-        #region Clear
-
-        void OnDestroy()
-        {
-            OnDispose();
-        }
-
-        #endregion
     }
 }

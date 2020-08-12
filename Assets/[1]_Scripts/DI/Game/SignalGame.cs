@@ -28,6 +28,13 @@ namespace SA.SpaceShooter
         #endregion
 
 
+        #region Asteroids
+
+        public class DestroyAsteroid { }
+
+        #endregion
+
+
         #region Player 
 
         public class AddPoints
@@ -66,6 +73,8 @@ namespace SA.SpaceShooter
         public class PlayMusic_Game { }
 
         public class PlayMusicGameMenu { }
+
+        public class PlayMusic_Win { }
 
         #endregion
 

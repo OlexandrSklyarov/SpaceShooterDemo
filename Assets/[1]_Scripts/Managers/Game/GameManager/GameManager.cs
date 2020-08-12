@@ -2,12 +2,10 @@
 using UnityEngine;
 using Zenject;
 using UnityEngine.SceneManagement;
-using UniRx;
-using System;
 
 namespace SA.SpaceShooter
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : MonoActionTimer
     {
         #region Properties
 
@@ -39,8 +37,15 @@ namespace SA.SpaceShooter
 
         GameMode _currentGameMode;
 
+        GameSettings settings;
+
         int points;
 
+        //asteroids
+        int maxDestroyAsteroids;
+        int countDestroyAsteroids;
+
+        //pool
         int completedPopulateProcess;
         int maxPopulateProcess;
         bool isPopulate;
@@ -68,6 +73,8 @@ namespace SA.SpaceShooter
             this.enemySpawnPoints = enemySpawnPoints;
             this.asteroidSpawnPoints = asteroidSpawnPoints;
 
+            settings = GameSettings.GetInstance();
+
             Subscription();
 
             PopulatePoolObjects();
@@ -79,22 +86,19 @@ namespace SA.SpaceShooter
             //add points
             signalBus.Subscribe((SignalGame.AddPoints s) =>
             {
-                points += s.PointSum;
-                signalBus.Fire(new SignalGame.UpdatePointSum() { Sum = points });
+                AddPoints(s.PointSum);
             });
 
             //pause
             signalBus.Subscribe((SignalGame.OnClickPauseButton s) =>
             {
-                SetGameMode(GameMode.PAUSE);
-                SignalPlayMenuMusic();
-                Time.timeScale = 0f;
+                Pause();
             });
 
             //continue game
             signalBus.Subscribe((SignalGame.OnClickContinueGameButton s) =>
             {
-                PlayGame();
+                StartGame();
             });
 
             //meinMenu
@@ -112,29 +116,55 @@ namespace SA.SpaceShooter
             //palyer destroyed
             signalBus.Subscribe((SignalGame.PlayerDestroy s) =>
             {
-                SetGameMode(GameMode.STOP);
+                SetGameMode(GameMode.GAME_OVER);
+            });
+
+            //destroy asteroid
+            signalBus.Subscribe<SignalGame.DestroyAsteroid>(() =>
+            {
+                countDestroyAsteroids++;
+
+                if (countDestroyAsteroids >= maxDestroyAsteroids)
+                {
+                    Win();
+                }
             });
         }
 
 
         void CreateGame()
         {
-            unitManager = new UnitManager(dataGame,
-                                           playerSpawnPoint,
-                                           enemySpawnPoints,
-                                           signalBus);
+            CreateUnitmanager();
+            CreateAsteroidGenerator();
+            SetupStartGamePrm();
 
-            asteroidGenerator = new AsteroidGenerator(dataGame, asteroidSpawnPoints, signalBus);
-
-            PlayGame();
+            StartGame();
         }
 
 
-        void PlayGame()
+        void CreateUnitmanager()
         {
-            SetGameMode(GameMode.GAME);
-            SignalPlayGameMusic();
-            Time.timeScale = 1f;
+            unitManager = new UnitManager(
+                dataGame,playerSpawnPoint,enemySpawnPoints,signalBus);
+        }
+
+
+        void CreateAsteroidGenerator()
+        {
+            asteroidGenerator = new AsteroidGenerator(
+                dataGame, asteroidSpawnPoints, signalBus);
+        }
+
+
+        //устанавливает стартовые значения очков и количества уничтоженых астероидов
+        void SetupStartGamePrm()
+        {
+            points = 0;
+
+            //count asteroids
+            var curLevel = settings.Levels[settings.CurrentLevelIndex]; 
+            maxDestroyAsteroids = curLevel.maxDestroyAsteroids;
+            countDestroyAsteroids = 0;
         }
 
         #endregion
@@ -231,9 +261,56 @@ namespace SA.SpaceShooter
             CurrentGameMode = mode;
         }
 
+
+        void StartGame()
+        {
+            SetGameMode(GameMode.GAME);
+            SignalPlayGameMusic();
+            Time.timeScale = 1f;
+        }
+
+
+        void Pause()
+        {
+            SetGameMode(GameMode.PAUSE);
+            SignalPlayMenuMusic();
+            Time.timeScale = 0f;
+        }
+
+
         void GameRestart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+
+        void Win()
+        {
+            if (CurrentGameMode == GameMode.GAME_WIN) return;
+
+            SetGameMode(GameMode.GAME_WIN);
+            signalBus.Fire(new SignalGame.PlayMusic_Win());
+
+            SetStatusLevel();
+
+            //выходим в главное меню по таймеру
+            ActionTimer(3f, LoadMeinMenu);
+        }
+
+
+        void SetStatusLevel()
+        {
+            var curIndex = settings.CurrentLevelIndex;
+
+            //устанавливаем статус текущему уровню как пройденый
+            settings.Levels[curIndex].status = Level.LevelStatus.COMPLETED;
+
+            //если текущий индекс уровня не последний
+            //открываем следующий уровень
+            if (curIndex < settings.Levels.Length-1)
+            {
+                settings.Levels[curIndex + 1].status = Level.LevelStatus.OPEN;
+            }
         }
 
 
@@ -242,19 +319,16 @@ namespace SA.SpaceShooter
             SceneManager.LoadScene(StaticPrm.Scene.MAIN_MENU);
         }
 
-        #endregion
 
-
-        #region Timer
-
-        protected void ActionTimer(float time, Action act)
+        void AddPoints(int sum)
         {
-            Observable.Timer(TimeSpan.FromSeconds(time))
-            .Subscribe(_ =>
-            {
-                act?.Invoke();
-            })
-            .AddTo(this);
+            points += sum;
+
+            //если мы обновили рекорд, перезаписываем его
+            if (points > GameSettings.GetInstance().PointRecord)
+                GameSettings.GetInstance().PointRecord = points;
+
+            signalBus.Fire(new SignalGame.UpdatePointSum() { Sum = points });
         }
 
         #endregion
@@ -286,9 +360,22 @@ namespace SA.SpaceShooter
 
         void OnDestroy()
         {
+            DestroyAllBullets();
             unitManager?.Clear();
             asteroidGenerator?.Clear();
             BuildManager.GetInstance().Clear();
+
+            OnDispose();
+        }
+
+
+        void DestroyAllBullets()
+        {
+            var bullets = FindObjectsOfType<Bullet>();
+
+            for (int i = 0; i < bullets.Length; i++)
+                if (bullets[i].gameObject.activeInHierarchy)
+                    Destroy(bullets[i].gameObject);
         }
 
 
