@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using TMPro;
-using System;
 
 namespace SA.SpaceShooter.UI
 {
@@ -18,7 +17,6 @@ namespace SA.SpaceShooter.UI
         [Space]
         [Header("Levels list")]
         [SerializeField] Transform content;
-
 
 
         SignalBus signalBus;
