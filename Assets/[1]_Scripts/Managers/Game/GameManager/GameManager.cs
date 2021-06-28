@@ -146,8 +146,6 @@ namespace SA.SpaceShooter
             CreateUnitmanager();
             CreateAsteroidGenerator();
             SetupStartGamePrm();
-            SetGameMode(GameMode.GAME);
-            ResetGame();
 
             isInit = true;
         }
@@ -271,7 +269,7 @@ namespace SA.SpaceShooter
         #endregion
 
 
-        #region Game procces
+        #region Game progress
 
 
         void SetGameMode(GameMode mode)
@@ -291,6 +289,8 @@ namespace SA.SpaceShooter
         {
             if (!isInit) Setup();
             SignalPlayGameMusic();
+            ResetGame();
+            SetGameMode(GameMode.GAME);
         }
 
 

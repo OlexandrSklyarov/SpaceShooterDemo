@@ -208,12 +208,12 @@ namespace SA.SpaceShooter.UI
 
         void InitPauseMenu()
         {
+            EnabledPauseMenuCanvas(false);
+
             continueGameButton.onClick.AddListener(() =>
             {
                 signalBus.Fire(new SignalGame.OnClickContinueGameButton());
-            });
-
-            EnabledPauseMenuCanvas(false);
+            });            
         }
 
 
