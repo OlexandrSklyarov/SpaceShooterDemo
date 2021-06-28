@@ -12,7 +12,6 @@ namespace SA.SpaceShooter
 
         SignalBus signalBus;
         DataLevel dataLevel;
-
         GameSettings settings;
 
         #endregion
@@ -36,7 +35,7 @@ namespace SA.SpaceShooter
 
         IEnumerator StartGame(float time)
         {
-            yield return new WaitForSeconds(time);
+            yield return new WaitForEndOfFrame();
 
             SiganlLoadGame();
             SignalPlayMusic();
@@ -64,7 +63,7 @@ namespace SA.SpaceShooter
         void LoadScene(string sceneName)
         {
             Debug.Log("Load game scene");
-            SceneManager.LoadScene(sceneName);
+            SceneManager.LoadSceneAsync(sceneName);
         }
 
         #endregion

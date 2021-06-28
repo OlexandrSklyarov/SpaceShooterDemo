@@ -83,27 +83,30 @@ namespace SA.SpaceShooter.UI
             {
                 var newButton = CreateLevel(dataLevelUI.LevelTemplatePrefab);
                 var status = levels[i].status;
-                var index = i;
-
+                
                 //инициализируем кнопку и передаём обратный вызов при нажатии кнопке уровня
-                InitLevelButton(ref newButton, status, index + 1, () => 
-                { 
-                    //если уровень имеет статус открыт, или пройден
-                    if (status == Level.LevelStatus.OPEN ||
-                        status == Level.LevelStatus.COMPLETED)
-                    {
-                        signalBus.Fire(new SignalMainMenu.OnClickLevelButton()
-                        {
-                            LevelIndex = index
-                        });
-                    }
+                InitLevelButton(newButton, status, i, $"{i+1}", OnSelectLevel);
+            }
+        }
+
+
+        void OnSelectLevel(Level.LevelStatus status, int buttonIndex)
+        {
+            //если уровень имеет статус открыт, или пройден
+            if (status == Level.LevelStatus.OPEN || status == Level.LevelStatus.COMPLETED)
+            {
+                signalBus.Fire(new SignalMainMenu.OnClickLevelButton()
+                {
+                    LevelIndex = buttonIndex
                 });
             }
         }
 
 
+
+
         //инициализирует кнопку уровня
-        void InitLevelButton(ref LevelButton newButton, Level.LevelStatus status, int index, Action callback)
+        void InitLevelButton(LevelButton newButton, Level.LevelStatus status, int index, string levelName, Action<Level.LevelStatus, int> callback)
         {
             Sprite bkg = dataLevelUI.CloseLevelBGR;
             Sprite icon = dataLevelUI.CloseLevelIcon;
@@ -121,18 +124,16 @@ namespace SA.SpaceShooter.UI
             }
 
             //инициализируем кнопку
-            newButton.Init(bkg, icon, index, callback);
+            newButton.Init(bkg, icon, status, index, levelName, callback);
         }
 
 
         //возвращает объект кнопки уровня
         LevelButton CreateLevel(GameObject prefab)
         {
-            var go = BuildManager.GetInstance().Spawn(  Pool.PoolType.UI,
-                                                        prefab,
-                                                        Vector3.zero,
-                                                        Quaternion.identity,
-                                                        content);
+            var go = BuildManager
+                .GetInstance()
+                .Spawn(Pool.PoolType.UI, prefab, Vector3.zero, Quaternion.identity, content);
 
             return go.GetComponent<LevelButton>();
         }

@@ -49,6 +49,8 @@ namespace SA.SpaceShooter
         int completedPopulateProcess;
         int maxPopulateProcess;
         bool isPopulate;
+        
+        bool isInit;
 
         #endregion
 
@@ -134,16 +136,27 @@ namespace SA.SpaceShooter
 
         void CreateGame()
         {
+            Setup();
+            StartGame();
+        }
+
+
+        void Setup()
+        {
             CreateUnitmanager();
             CreateAsteroidGenerator();
             SetupStartGamePrm();
+            SetGameMode(GameMode.GAME);
+            ResetGame();
 
-            StartGame();
+            isInit = true;
         }
 
 
         void CreateUnitmanager()
         {
+            if (unitManager != null) return;
+
             unitManager = new UnitManager(
                 dataGame,playerSpawnPoint,enemySpawnPoints,signalBus);
         }
@@ -151,6 +164,8 @@ namespace SA.SpaceShooter
 
         void CreateAsteroidGenerator()
         {
+            if (asteroidGenerator != null) return;
+
             asteroidGenerator = new AsteroidGenerator(
                 dataGame, asteroidSpawnPoints, signalBus);
         }
@@ -159,6 +174,8 @@ namespace SA.SpaceShooter
         //устанавливает стартовые значения очков и количества уничтоженых астероидов
         void SetupStartGamePrm()
         {
+            if(isInit) return;
+
             points = 0;
 
             //count asteroids
@@ -247,8 +264,9 @@ namespace SA.SpaceShooter
 
         bool IsGame()
         {
-            return CurrentGameMode == GameMode.GAME;
+            return CurrentGameMode == GameMode.GAME && isInit;
         }
+
 
         #endregion
 
@@ -258,15 +276,21 @@ namespace SA.SpaceShooter
 
         void SetGameMode(GameMode mode)
         {
+            Debug.Log($"Set game mode:{mode}");
             CurrentGameMode = mode;
+        }
+
+
+        void ResetGame()
+        {
+            Time.timeScale = 1f;
         }
 
 
         void StartGame()
         {
-            SetGameMode(GameMode.GAME);
+            if (!isInit) Setup();
             SignalPlayGameMusic();
-            Time.timeScale = 1f;
         }
 
 
@@ -275,11 +299,13 @@ namespace SA.SpaceShooter
             SetGameMode(GameMode.PAUSE);
             SignalPlayMenuMusic();
             Time.timeScale = 0f;
-        }
+        }        
 
+        
 
         void GameRestart()
         {
+            ResetGame();
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
@@ -323,7 +349,8 @@ namespace SA.SpaceShooter
 
         void LoadMeinMenu()
         {
-            SceneManager.LoadScene(StaticPrm.Scene.MAIN_MENU);
+            ResetGame();
+            SceneManager.LoadSceneAsync(StaticPrm.Scene.MAIN_MENU);
         }
 
 
@@ -373,6 +400,8 @@ namespace SA.SpaceShooter
             BuildManager.GetInstance().Clear();
 
             OnDispose();
+
+            isInit = false;
         }
 
 

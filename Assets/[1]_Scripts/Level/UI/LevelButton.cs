@@ -19,15 +19,20 @@ namespace SA.SpaceShooter.UI
 
         #region Init
 
-        public void Init(Sprite backgraund, Sprite statusIcon, int index, Action callback)
+        public void Init(Sprite backgraund, 
+                        Sprite statusIcon, 
+                        Level.LevelStatus status, 
+                        int index, 
+                        string levelName, 
+                        Action<Level.LevelStatus, int> callback)
         {
             backgraundImage.sprite = backgraund;
             statusImage.sprite = statusIcon;
-            nameText.text = index.ToString();
+            nameText.text = levelName;
 
             clickButton.onClick.AddListener(() =>
             {
-                callback?.Invoke();
+                callback?.Invoke(status, index);
             });
         }    
 
