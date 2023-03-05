@@ -7,7 +7,6 @@ using Random = UnityEngine.Random;
 
 namespace SA.SpaceShooter
 {
-    [RequireComponent(typeof(Rigidbody))]
     public class Asteroid : MonoBehaviour, Pool.IPoolable, IEnemy, ITarget, IHealth
     {
         #region Properties
@@ -24,6 +23,8 @@ namespace SA.SpaceShooter
                 currentHP = Mathf.Clamp(value, 0, MAX_HP);
                 if (currentHP <= 0)
                 {
+                    OnDestroyAsteroid?.Invoke(this);
+                    
                     SignalAddPoint();
                     CreateVFX();
                     SignalSFX();
@@ -47,13 +48,18 @@ namespace SA.SpaceShooter
 
         Transform myTR;
         SignalBus signalBus;
-        Rigidbody rb;
 
         int incomePoints;
         int currentHP;
         const int MAX_HP = 1;
 
         float zMapSize;
+        private Vector3 _moveDirection;
+        private float _speed;
+        private float _rotateSpeed;
+        private Quaternion _startRotation;
+        private Vector3 _randomRotation;
+        private bool _isCanMove;
 
         #endregion
 
@@ -63,7 +69,6 @@ namespace SA.SpaceShooter
         void Awake()
         {
             myTR = transform;
-            rb = GetComponent<Rigidbody>();
             TargetType = Target.OTHER;
         }
 
@@ -77,18 +82,16 @@ namespace SA.SpaceShooter
         }
 
 
-        public void Push(Vector3 force)
+        public void Push(Vector3 dir, float speed)
         {
-            rb.isKinematic = false;
-            rb.AddForce(force, ForceMode.VelocityChange);
-            RandomRotate();
+            _moveDirection = dir;
+            _speed = speed;
+            _rotateSpeed = Random.Range(0f, speed);
+            _startRotation = myTR.rotation;
+            _randomRotation = Random.insideUnitSphere;
+            _isCanMove = true;
         }
 
-
-        void RandomRotate()
-        {
-           rb.angularVelocity = Random.insideUnitSphere * Random.Range(0.1f, 10f);
-        }
 
         #endregion
 
@@ -97,6 +100,15 @@ namespace SA.SpaceShooter
 
         public void Tick()
         {
+            if (!_isCanMove) return;
+
+            myTR.position += _moveDirection * _speed * Time.deltaTime;
+
+            _randomRotation.x += _rotateSpeed * Time.deltaTime;
+            _randomRotation.y += _rotateSpeed * Time.deltaTime;
+            _randomRotation.z += _rotateSpeed * Time.deltaTime;
+            myTR.rotation = _startRotation * Quaternion.Euler(_randomRotation);
+
             if (myTR.position.z < zMapSize)
             {
                 ReturnToPool();
@@ -134,11 +146,8 @@ namespace SA.SpaceShooter
 
         void CreateVFX()
         {
-            BuildManager.GetInstance().Spawn(   PoolType.VFX,
-                                                destroyVFX,
-                                                transform.position,
-                                                Quaternion.identity,
-                                                null);
+            BuildManager.GetInstance()
+                .Spawn(PoolType.VFX, destroyVFX, transform.position,Quaternion.identity, null);
         }
 
         #endregion
@@ -149,8 +158,7 @@ namespace SA.SpaceShooter
         void ReturnToPool()
         {
             if (gameObject == null) return;
-
-            OnDestroyAsteroid?.Invoke(this);
+            
             BuildManager.GetInstance().Despawn(PoolType.ENTITIES, this.gameObject);
         }
 
@@ -158,10 +166,7 @@ namespace SA.SpaceShooter
         public void OnSpawn() { }
 
 
-        public void OnDespawn()
-        {
-            rb.isKinematic = true;
-        }
+        public void OnDespawn() => _isCanMove = false;
 
 
         public void Damage()

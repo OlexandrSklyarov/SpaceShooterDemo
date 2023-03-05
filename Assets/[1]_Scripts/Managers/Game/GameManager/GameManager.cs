@@ -164,8 +164,7 @@ namespace SA.SpaceShooter
         {
             if (asteroidGenerator != null) return;
 
-            asteroidGenerator = new AsteroidGenerator(
-                dataGame, asteroidSpawnPoints, signalBus);
+            asteroidGenerator = new AsteroidGenerator(dataGame, asteroidSpawnPoints, signalBus);
         }
 
 

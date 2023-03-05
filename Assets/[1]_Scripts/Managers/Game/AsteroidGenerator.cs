@@ -66,7 +66,7 @@ namespace SA.SpaceShooter
 
             asteroid.Init(  dataGame.MapSize.Down, dataGame.AddPoints, signalBus);
 
-            asteroid.Push(Vector3.back * speed);
+            asteroid.Push(Vector3.back, speed);
         }
 
 

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class RandomRotator : MonoBehaviour
 {
@@ -8,6 +7,6 @@ public class RandomRotator : MonoBehaviour
 
     void Start()
     {
-        GetComponent<Rigidbody>().angularVelocity = Random.insideUnitSphere * tumble;
+        transform.rotation = Quaternion.LookRotation(Random.insideUnitSphere * tumble);
     }
 }
